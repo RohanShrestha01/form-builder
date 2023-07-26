@@ -1,0 +1,13 @@
+{
+  "name": "form-builder",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "pnpm --stream -r run dev"
+  },
+  "keywords": [],
+  "author": "Rohan Shrestha",
+  "license": "ISC",
+  "devDependencies": {
+    "prettier": "^3.0.0"
+  }
+}
