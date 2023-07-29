@@ -23,7 +23,7 @@
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^4.29.9",
     "@tanstack/react-query-devtools": "^4.29.23",
-    "@types/node": "^20.4.2",
+    "@types/node": "^20.4.5",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
     "@typescript-eslint/eslint-plugin": "^5.61.0",
@@ -43,7 +43,7 @@
     "tailwind-merge": "^1.14.0",
     "tailwindcss": "^3.3.3",
     "tailwindcss-animate": "^1.0.6",
-    "typescript": "^5.0.2",
+    "typescript": "^5.1.6",
     "vite": "^4.4.0"
   }
 }
