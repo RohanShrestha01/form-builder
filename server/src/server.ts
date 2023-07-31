@@ -4,7 +4,7 @@ dotenv.config();
 
 import app from './app';
 
-mongoose.connect(process.env.DATABASE);
+mongoose.connect(process.env.DATABASE!);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
