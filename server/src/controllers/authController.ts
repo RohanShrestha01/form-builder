@@ -1,7 +1,8 @@
 import { type Response, type Request } from 'express';
-import User from 'models/userModel';
+import User from '../models/userModel';
+import catchAsyncError from '../utils/catchAsyncError';
 
-export const signUp = async (req: Request, res: Response) => {
+export const signUp = catchAsyncError(async (req: Request, res: Response) => {
   const newUser = await User.create(req.body);
 
   res.status(201).json({
@@ -10,4 +11,4 @@ export const signUp = async (req: Request, res: Response) => {
       user: newUser,
     },
   });
-};
+});
