@@ -1,6 +1,7 @@
 import { type Response, type Request, type NextFunction } from 'express';
 import { hash } from 'bcrypt';
 import { registerSchema } from 'validation';
+import { sign } from 'jsonwebtoken';
 
 import User from '../models/userModel';
 import catchAsyncError from '../utils/catchAsyncError';
@@ -25,9 +26,13 @@ export const signUp = catchAsyncError(
     const password = await hash(result.data.password, 12);
 
     const newUser = await User.create({ name, email, password });
+    const token = sign({ id: newUser._id }, process.env.JWT_SECRET!, {
+      expiresIn: process.env.JWT_EXPIRES_IN,
+    });
 
     res.status(201).json({
       status: 'success',
+      token,
       data: {
         user: newUser,
       },

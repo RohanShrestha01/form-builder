@@ -10,7 +10,7 @@ export const globalErrorHandler: ErrorRequestHandler = (
   err.statusCode = isOperational ? err.statusCode || 500 : 500;
   err.status = isOperational ? err.status || 'error' : 'error';
 
-  if (isOperational) console.error(err);
+  if (!isOperational) console.error(err);
 
   res.status(err.statusCode).json({
     status: err.status,
