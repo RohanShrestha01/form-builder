@@ -1,0 +1,13 @@
+{
+  "name": "validation",
+  "version": "1.0.0",
+  "description": "A code library for validation, reusable in the frontend and backend.",
+  "main": "index.ts",
+  "scripts": {},
+  "keywords": [],
+  "author": "shrestharohan039@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "zod": "^3.21.4"
+  }
+}

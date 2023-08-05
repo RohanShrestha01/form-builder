@@ -1,14 +1,36 @@
-import { type Response, type Request } from 'express';
+import { type Response, type Request, type NextFunction } from 'express';
+import { hash } from 'bcrypt';
+import { registerSchema } from 'validation';
+
 import User from '../models/userModel';
 import catchAsyncError from '../utils/catchAsyncError';
+import AppError from '../utils/appError';
 
-export const signUp = catchAsyncError(async (req: Request, res: Response) => {
-  const newUser = await User.create(req.body);
+export const signUp = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const result = registerSchema.safeParse(req.body);
+    if (!result.success)
+      return next(
+        new AppError(
+          'Validation failed!',
+          400,
+          result.error.flatten().fieldErrors,
+        ),
+      );
 
-  res.status(201).json({
-    status: 'success',
-    data: {
-      user: newUser,
-    },
-  });
-});
+    const user = await User.findOne({ email: result.data.email });
+    if (user) return next(new AppError('User already exists!', 400));
+
+    const { name, email } = result.data;
+    const password = await hash(result.data.password, 12);
+
+    const newUser = await User.create({ name, email, password });
+
+    res.status(201).json({
+      status: 'success',
+      data: {
+        user: newUser,
+      },
+    });
+  },
+);

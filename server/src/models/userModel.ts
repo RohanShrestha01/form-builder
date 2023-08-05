@@ -4,19 +4,20 @@ const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, 'Please tell us your name'],
+      required: true,
     },
     email: {
       type: String,
-      required: [true, 'Please provide your email'],
+      required: true,
       unique: true,
       lowercase: true,
     },
     avatar: String,
     password: {
       type: String,
-      required: [true, 'Please provide a password'],
+      required: true,
       minLength: 8,
+      select: false,
     },
   },
   { timestamps: true },

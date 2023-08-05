@@ -6,11 +6,15 @@ export const globalErrorHandler: ErrorRequestHandler = (
   res,
   _next,
 ) => {
-  err.statusCode = err.statusCode || 500;
-  err.status = err.status || 'error';
+  const { message, data, isOperational } = err;
+  err.statusCode = isOperational ? err.statusCode || 500 : 500;
+  err.status = isOperational ? err.status || 'error' : 'error';
+
+  if (isOperational) console.error(err);
 
   res.status(err.statusCode).json({
     status: err.status,
-    message: err.message,
+    message: isOperational ? message : 'Something went wrong!',
+    data,
   });
 };
