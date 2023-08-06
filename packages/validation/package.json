@@ -1,5 +1,5 @@
 {
-  "name": "validation",
+  "name": "@form-builder/validation",
   "version": "1.0.0",
   "description": "A code library for validation, reusable in the frontend and backend.",
   "main": "index.ts",

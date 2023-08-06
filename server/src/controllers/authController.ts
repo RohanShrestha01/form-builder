@@ -1,6 +1,6 @@
 import { type Response, type Request, type NextFunction } from 'express';
 import { hash, compare } from 'bcrypt';
-import { registerSchema } from 'validation';
+import { registerSchema } from '@form-builder/validation';
 import { sign } from 'jsonwebtoken';
 
 import User from '../models/userModel';
@@ -14,7 +14,7 @@ const signToken = (id: string) =>
 
 export const signUp = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
-    const result = registerSchema.safeParse(req.body);
+    const result = await registerSchema.safeParseAsync(req.body);
     if (!result.success)
       return next(
         new AppError(

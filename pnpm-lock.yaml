@@ -14,6 +14,9 @@ importers:
 
   client:
     dependencies:
+      '@form-builder/validation':
+        specifier: workspace:*
+        version: link:../packages/validation
       '@hookform/resolvers':
         specifier: ^3.1.1
         version: 3.1.1(react-hook-form@7.45.1)
@@ -38,9 +41,6 @@ importers:
       react-router-dom:
         specifier: ^6.14.1
         version: 6.14.1(react-dom@18.2.0)(react@18.2.0)
-      validation:
-        specifier: workspace:*
-        version: link:../packages/validation
       zod:
         specifier: ^3.21.4
         version: 3.21.4
@@ -132,6 +132,9 @@ importers:
 
   server:
     dependencies:
+      '@form-builder/validation':
+        specifier: workspace:*
+        version: link:../packages/validation
       bcrypt:
         specifier: ^5.1.0
         version: 5.1.0
@@ -153,9 +156,6 @@ importers:
       mongoose:
         specifier: ^7.4.1
         version: 7.4.1
-      validation:
-        specifier: workspace:*
-        version: link:../packages/validation
       zod:
         specifier: ^3.21.4
         version: 3.21.4
