@@ -2,10 +2,12 @@ module.exports = {
   root: true,
   env: { browser: true, es2020: true },
   extends: [
-    'react-app',
     'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:react/jsx-runtime',
     'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
+    'plugin:@tanstack/eslint-plugin-query/recommended',
     'plugin:prettier/recommended',
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
@@ -16,8 +18,6 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
-    '@typescript-eslint/no-non-null-assertion': 'off',
     'no-console': 'warn',
-    'no-unused-vars': 'warn',
   },
 };
