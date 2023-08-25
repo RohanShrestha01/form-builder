@@ -18,7 +18,7 @@ const InputField = forwardRef<HTMLInputElement, Props>(
         <label
           htmlFor={props.name}
           className={cn(
-            'text-muted-foreground peer-focus-visible:text-foreground space-x-1 text-sm font-medium peer-disabled:opacity-50',
+            'text-muted-foreground peer-focus-visible:text-foreground space-x-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
             className,
           )}
         >
@@ -30,6 +30,6 @@ const InputField = forwardRef<HTMLInputElement, Props>(
   },
 );
 
-InputField.displayName = 'Input Field';
+InputField.displayName = 'InputField';
 
 export default InputField;
