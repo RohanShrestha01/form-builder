@@ -15,10 +15,12 @@ export default {
       colors: {
         border: colors.slate[200],
         ring: colors.slate[400],
+        foreground: colors.slate[950],
         muted: {
           DEFAULT: colors.slate[100],
           foreground: colors.slate[500],
         },
+        primary: colors.indigo[700],
       },
     },
   },
