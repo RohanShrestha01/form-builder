@@ -13,7 +13,12 @@ export default {
         sans: ['Open Sans', ...defaultTheme.fontFamily.sans],
       },
       colors: {
-        blackText: colors.gray[800],
+        border: colors.slate[200],
+        ring: colors.slate[400],
+        muted: {
+          DEFAULT: colors.slate[100],
+          foreground: colors.slate[500],
+        },
       },
     },
   },
