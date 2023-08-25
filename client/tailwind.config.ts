@@ -21,6 +21,7 @@ export default {
           foreground: colors.slate[500],
         },
         primary: colors.indigo[700],
+        danger: colors.red[500],
       },
     },
   },
