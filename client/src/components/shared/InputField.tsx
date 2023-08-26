@@ -13,7 +13,7 @@ const InputField = React.forwardRef<HTMLInputElement, Props>(
     return (
       <div className="flex flex-col-reverse gap-2">
         {errorMessage ? (
-          <span className="text-destructive text-xs">{errorMessage}</span>
+          <span className="text-xs text-destructive">{errorMessage}</span>
         ) : null}
         <Input ref={ref} className="peer" {...props} />
         <label

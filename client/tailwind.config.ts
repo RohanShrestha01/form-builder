@@ -26,7 +26,7 @@ export default {
           foreground: colors.slate[50],
         },
         secondary: {
-          DEFAULT: colors.indigo[100],
+          DEFAULT: colors.slate[100],
           foreground: colors.slate[900],
         },
         destructive: {

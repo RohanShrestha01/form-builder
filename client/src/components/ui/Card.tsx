@@ -6,7 +6,7 @@ const Card = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>(
   ({ className, ...props }, ref) => (
     <article
       ref={ref}
-      className={cn('rounded-lg border shadow-sm', className)}
+      className={cn('rounded-xl border shadow', className)}
       {...props}
     />
   ),
