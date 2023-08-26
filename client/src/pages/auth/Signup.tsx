@@ -6,22 +6,20 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '../components/ui/Card';
-import InputField from '../components/shared/InputField';
-import { Button } from '../components/ui/Button';
-import SignInButtons from '../components/auth/SignInButtons';
+} from '../../components/ui/Card';
+import InputField from '../../components/shared/InputField';
+import { Button } from '../../components/ui/Button';
+import SignInButtons from '../../components/auth/SignInButtons';
 
 export default function Signup() {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Create an account</CardTitle>
-        <CardDescription>
-          Enter your email below to create your account
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form className="flex flex-col gap-4">
+    <form>
+      <Card>
+        <CardHeader>
+          <CardTitle>Create an account</CardTitle>
+          <CardDescription>Enter your email to create account</CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
           <SignInButtons />
           <div className="relative z-10 text-center">
             <hr className="absolute left-0 right-0 top-1/2 -z-10" />
@@ -53,19 +51,19 @@ export default function Signup() {
             type="password"
             className="text-slate-600"
           />
-        </form>
-      </CardContent>
-      <CardFooter className="flex-col gap-3">
-        <Button type="submit" className="w-full">
-          Sign Up
-        </Button>
-        <div className="flex justify-center gap-2 text-sm">
-          <p className="text-muted-foreground">Already have an account?</p>
-          <Link className="text-primary hover:underline" to="/login">
-            Sign In
-          </Link>
-        </div>
-      </CardFooter>
-    </Card>
+        </CardContent>
+        <CardFooter className="flex-col gap-3">
+          <Button type="submit" className="w-full">
+            Sign Up
+          </Button>
+          <div className="flex justify-center gap-2 text-sm">
+            <p className="text-muted-foreground">Already have an account?</p>
+            <Link className="text-primary hover:underline" to="/login">
+              Sign In
+            </Link>
+          </div>
+        </CardFooter>
+      </Card>
+    </form>
   );
 }

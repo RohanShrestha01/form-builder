@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import InputField from '../components/shared/InputField';
-import { Button } from '../components/ui/Button';
+import InputField from '../../components/shared/InputField';
+import { Button } from '../../components/ui/Button';
 import {
   Card,
   CardHeader,
@@ -8,18 +8,18 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from '../components/ui/Card';
-import SignInButtons from '../components/auth/SignInButtons';
+} from '../../components/ui/Card';
+import SignInButtons from '../../components/auth/SignInButtons';
 
 export default function Login() {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Welcome Back</CardTitle>
-        <CardDescription>Sign in to your account</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form className="flex flex-col gap-4">
+    <form>
+      <Card>
+        <CardHeader>
+          <CardTitle>Welcome Back</CardTitle>
+          <CardDescription>Sign in to your account</CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
           <SignInButtons />
           <div className="relative z-10 text-center">
             <hr className="absolute left-0 right-0 top-1/2 -z-10" />
@@ -64,21 +64,21 @@ export default function Login() {
               Forgot password?
             </Link>
           </div>
-        </form>
-      </CardContent>
-      <CardFooter className="flex-col gap-3">
-        <Button type="submit" className="w-full">
-          Sign In
-        </Button>
-        <div className="flex justify-center gap-2 text-sm">
-          <p className="text-muted-foreground">
-            Don&#39;t have an account yet?
-          </p>
-          <Link className="text-primary hover:underline" to="/signup">
-            Sign Up
-          </Link>
-        </div>
-      </CardFooter>
-    </Card>
+        </CardContent>
+        <CardFooter className="flex-col gap-3">
+          <Button type="submit" className="w-full">
+            Sign In
+          </Button>
+          <div className="flex justify-center gap-2 text-sm">
+            <p className="text-muted-foreground">
+              Don&#39;t have an account yet?
+            </p>
+            <Link className="text-primary hover:underline" to="/signup">
+              Sign Up
+            </Link>
+          </div>
+        </CardFooter>
+      </Card>
+    </form>
   );
 }

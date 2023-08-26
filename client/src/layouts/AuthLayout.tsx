@@ -21,8 +21,8 @@ export default function AuthLayout() {
               <Link to="/demo">Demo</Link>
             </Button>
             <Button size="lg" asChild>
-              <Link to={pathname === '/login' ? '/signup' : '/login'}>
-                {pathname === '/login' ? 'Sign Up' : 'Log In'}
+              <Link to={pathname === '/signup' ? '/login' : '/signup'}>
+                {pathname === '/signup' ? 'Log In' : 'Sign Up'}
               </Link>
             </Button>
           </div>
