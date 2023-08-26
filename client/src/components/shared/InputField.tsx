@@ -19,7 +19,7 @@ const InputField = React.forwardRef<HTMLInputElement, Props>(
         <label
           htmlFor={props.name}
           className={cn(
-            'space-x-1 text-sm font-medium leading-none text-muted-foreground peer-focus-visible:text-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+            'space-x-1 text-sm font-medium leading-none text-muted-foreground peer-hover:text-foreground peer-focus-visible:text-primary peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
             className,
           )}
         >

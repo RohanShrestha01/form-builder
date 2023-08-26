@@ -1,7 +1,9 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 
 export default function AuthLayout() {
+  const { pathname } = useLocation();
+
   return (
     <div className="flex h-[100dvh] flex-col">
       <header className="border-b">
@@ -19,7 +21,9 @@ export default function AuthLayout() {
               <Link to="/demo">Demo</Link>
             </Button>
             <Button size="lg" asChild>
-              <Link to="/register">Sign Up</Link>
+              <Link to={pathname === '/login' ? '/signup' : '/login'}>
+                {pathname === '/login' ? 'Sign Up' : 'Log In'}
+              </Link>
             </Button>
           </div>
         </div>
