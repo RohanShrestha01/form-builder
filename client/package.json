@@ -12,6 +12,7 @@
   "dependencies": {
     "@form-builder/validation": "workspace:*",
     "@hookform/resolvers": "^3.2.0",
+    "@radix-ui/react-slot": "^1.0.2",
     "@tanstack/react-query": "^4.32.6",
     "axios": "^1.4.0",
     "lucide-react": "^0.266.0",

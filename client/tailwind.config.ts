@@ -16,12 +16,23 @@ export default {
         border: colors.slate[200],
         ring: colors.slate[400],
         foreground: colors.slate[950],
+        background: '#fff',
         muted: {
           DEFAULT: colors.slate[100],
           foreground: colors.slate[500],
         },
-        primary: colors.indigo[700],
-        danger: colors.red[500],
+        primary: {
+          DEFAULT: colors.indigo[700],
+          foreground: colors.slate[50],
+        },
+        secondary: {
+          DEFAULT: colors.indigo[100],
+          foreground: colors.slate[900],
+        },
+        destructive: {
+          DEFAULT: colors.red[500],
+          foreground: colors.slate[50],
+        },
       },
     },
   },
