@@ -50,7 +50,9 @@ export default function Signup() {
           const errors = err.response?.data?.errors;
           if (errors)
             for (const error in errors)
-              setError(error, { message: errors[error][0] });
+              setError(error as 'name' | 'email' | 'password' | 'cPassword', {
+                message: errors[error][0],
+              });
 
           let errorMsg =
             (err.response?.data?.message as string) || 'Registration failed!';
