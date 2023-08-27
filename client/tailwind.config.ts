@@ -24,6 +24,7 @@ export default {
         primary: {
           DEFAULT: colors.indigo[700],
           foreground: colors.slate[50],
+          background: colors.indigo[100],
         },
         secondary: {
           DEFAULT: colors.slate[100],
