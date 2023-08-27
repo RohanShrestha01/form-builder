@@ -6,10 +6,11 @@ import { cn } from '../../lib/utils';
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   errorMessage?: string;
+  showRequired?: boolean;
 }
 
 const InputField = React.forwardRef<HTMLInputElement, Props>(
-  ({ className, label, errorMessage, ...props }, ref) => {
+  ({ className, label, errorMessage, showRequired, ...props }, ref) => {
     return (
       <div className="flex flex-col-reverse gap-2">
         {errorMessage ? (
@@ -24,7 +25,7 @@ const InputField = React.forwardRef<HTMLInputElement, Props>(
           )}
         >
           <span>{label}</span>
-          {props.required ? <span className="text-destructive">*</span> : null}
+          {showRequired ? <span className="text-destructive">*</span> : null}
         </label>
       </div>
     );
