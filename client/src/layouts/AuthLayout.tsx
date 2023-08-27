@@ -6,8 +6,8 @@ export default function AuthLayout() {
 
   return (
     <div className="flex h-[100dvh] flex-col">
-      <header className="border-b">
-        <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center justify-between">
+      <header className="fixed left-0 right-0 top-0 z-30 border-b bg-white/80 backdrop-blur-sm">
+        <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center justify-between px-6">
           <Link to="/">
             <h1 className="text-xl font-bold">Form Builder</h1>
           </Link>
@@ -28,7 +28,7 @@ export default function AuthLayout() {
           </div>
         </div>
       </header>
-      <main className="mx-auto flex w-full max-w-[1440px] flex-grow">
+      <main className="mx-auto mt-16 flex w-full max-w-[1440px] flex-grow px-6 py-5">
         <section className="flex-grow"></section>
         <section className="w-[424px] self-center">
           <Outlet />

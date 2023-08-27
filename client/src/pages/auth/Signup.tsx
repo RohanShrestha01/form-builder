@@ -1,4 +1,9 @@
 import { Link } from 'react-router-dom';
+import { type SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { registerSchema } from '@form-builder/validation';
+import { z } from 'zod';
+
 import {
   Card,
   CardContent,
@@ -10,10 +15,25 @@ import {
 import InputField from '../../components/shared/InputField';
 import { Button } from '../../components/ui/Button';
 import SignInButtons from '../../components/auth/SignInButtons';
+import PasswordInfoCard from '../../components/auth/PasswordInfoCard';
+
+type SignupFormType = z.infer<typeof registerSchema>;
 
 export default function Signup() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignupFormType>({
+    resolver: zodResolver(registerSchema),
+  });
+
+  const onSubmit: SubmitHandler<SignupFormType> = data => {
+    console.log(data);
+  };
+
   return (
-    <form>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Card>
         <CardHeader>
           <CardTitle>Create an account</CardTitle>
@@ -29,28 +49,38 @@ export default function Signup() {
           </div>
           <InputField
             label="Full Name"
-            name="name"
             type="text"
             className="text-slate-600"
+            errorMessage={errors.name?.message}
+            {...register('name')}
           />
           <InputField
             label="Email"
-            name="email"
             type="email"
             className="text-slate-600"
+            errorMessage={errors.email?.message}
+            {...register('email')}
           />
-          <InputField
-            label="Password"
-            name="password"
-            type="password"
-            className="text-slate-600"
-          />
-          <InputField
-            label="Confirm Password"
-            name="cPassword"
-            type="password"
-            className="text-slate-600"
-          />
+          <div className="relative">
+            <InputField
+              label="Password"
+              type="password"
+              className="text-slate-600"
+              errorMessage={errors.password?.message}
+              {...register('password')}
+            />
+            <PasswordInfoCard className="absolute -top-[1px] left-[73px]" />
+          </div>
+          <div className="relative">
+            <InputField
+              label="Confirm Password"
+              type="password"
+              className="text-slate-600"
+              errorMessage={errors.cPassword?.message}
+              {...register('cPassword')}
+            />
+            <PasswordInfoCard className="absolute -top-[1px] left-[130px]" />
+          </div>
         </CardContent>
         <CardFooter className="flex-col gap-3">
           <Button type="submit" className="w-full">
