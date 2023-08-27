@@ -3,6 +3,7 @@ import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
+import { LoadingSpinnerSvg } from '@/assets/icons/Svgs';
 
 const buttonVariants = cva(
   'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
@@ -14,9 +15,9 @@ const buttonVariants = cva(
         destructive:
           'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90',
         outline:
-          'hover:bg-secondary hover:text-secondary-foreground border bg-transparent shadow-sm',
+          'border bg-transparent shadow-sm hover:bg-secondary hover:text-secondary-foreground',
         secondary:
-          'bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-sm',
+          'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80',
         ghost: 'hover:bg-secondary hover:text-secondary-foreground',
         link: 'text-primary underline-offset-4 hover:underline',
       },
@@ -38,17 +39,40 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
+  isLoading?: boolean;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  (
+    {
+      className,
+      variant,
+      size,
+      disabled,
+      isLoading,
+      children,
+      asChild = false,
+      ...props
+    },
+    ref,
+  ) => {
     const Comp = asChild ? Slot : 'button';
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
+        disabled={disabled || isLoading}
         ref={ref}
         {...props}
-      />
+      >
+        {asChild ? (
+          children
+        ) : (
+          <>
+            {isLoading && <LoadingSpinnerSvg className="mr-2 h-4 w-4" />}
+            {children}
+          </>
+        )}
+      </Comp>
     );
   },
 );

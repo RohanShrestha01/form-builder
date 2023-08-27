@@ -25,7 +25,12 @@ export const signUp = catchAsyncError(
       );
 
     const user = await User.findOne({ email: result.data.email });
-    if (user) return next(new AppError('User already exists!', 400));
+    if (user)
+      return next(
+        new AppError('User already exists!', 400, {
+          email: ['Email already exists'],
+        }),
+      );
 
     const { name, email } = result.data;
     const password = await hash(result.data.password, 12);

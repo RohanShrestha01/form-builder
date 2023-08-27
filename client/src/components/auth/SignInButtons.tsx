@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   FacebookSvg,
   GithubSvg,
@@ -7,29 +7,33 @@ import {
 } from '../../assets/icons/Svgs';
 import { Button } from '../ui/Button';
 
-export default function SignInButtons() {
+export default function SignInButtons({ disabled }: { disabled?: boolean }) {
+  const navigate = useNavigate();
+
   return (
     <div className="flex justify-around">
-      <Link to="/sso/login" className="space-y-2 text-center">
+      <article className="space-y-2 text-center">
         <Button
+          type="button"
           variant="outline"
           size="icon"
           className="peer h-12 w-12 rounded-2xl"
-          asChild
+          disabled={disabled}
+          onClick={() => navigate('/sso/login')}
         >
-          <div>
-            <SSOKeySvg className="h-[22px] w-[22px]" />
-          </div>
+          <SSOKeySvg className="h-[22px] w-[22px]" />
         </Button>
         <p className="text-sm text-muted-foreground transition-colors peer-hover:text-foreground">
           SSO
         </p>
-      </Link>
+      </article>
       <article className="space-y-2 text-center">
         <Button
+          type="button"
           variant="outline"
           size="icon"
           className="peer h-12 w-12 rounded-2xl"
+          disabled={disabled}
         >
           <GithubSvg className="h-5 w-5" />
         </Button>
@@ -39,9 +43,11 @@ export default function SignInButtons() {
       </article>
       <article className="space-y-2 text-center">
         <Button
+          type="button"
           variant="outline"
           size="icon"
           className="peer h-12 w-12 rounded-2xl"
+          disabled={disabled}
         >
           <GoogleSvg className="h-5 w-5" />
         </Button>
@@ -51,9 +57,11 @@ export default function SignInButtons() {
       </article>
       <article className="space-y-2 text-center">
         <Button
+          type="button"
           variant="outline"
           size="icon"
           className="peer h-12 w-12 rounded-2xl"
+          disabled={disabled}
         >
           <FacebookSvg className="h-5 w-5" />
         </Button>

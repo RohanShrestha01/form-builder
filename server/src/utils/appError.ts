@@ -1,4 +1,4 @@
-interface Data {
+interface Errors {
   [key: string]: string[];
 }
 
@@ -6,14 +6,14 @@ export default class AppError extends Error {
   statusCode: number;
   status: string;
   isOperational: boolean = true;
-  data?: Data;
+  errors?: Errors;
 
-  constructor(message: string, statusCode: number, data?: Data) {
+  constructor(message: string, statusCode: number, errors?: Errors) {
     super(message);
 
     this.statusCode = statusCode;
     this.status = `${statusCode}`.startsWith('4') ? 'fail' : 'error';
-    this.data = data;
+    this.errors = errors;
 
     Error.captureStackTrace(this, this.constructor);
   }

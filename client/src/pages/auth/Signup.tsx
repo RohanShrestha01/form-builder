@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { registerSchema } from '@form-builder/validation';
 import { z } from 'zod';
+import { toast } from 'react-hot-toast';
 
 import {
   Card,
@@ -16,20 +17,48 @@ import InputField from '../../components/shared/InputField';
 import { Button } from '../../components/ui/Button';
 import SignInButtons from '../../components/auth/SignInButtons';
 import PasswordInfoCard from '../../components/auth/PasswordInfoCard';
+import { useMutation } from '@tanstack/react-query';
+import axios from '@/lib/axios';
+import { isAxiosError } from 'axios';
 
 type SignupFormType = z.infer<typeof registerSchema>;
 
 export default function Signup() {
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<SignupFormType>({
     resolver: zodResolver(registerSchema),
   });
 
+  const mutation = useMutation({
+    mutationFn: (data: SignupFormType) => axios.post('/users/signup', data),
+  });
+
   const onSubmit: SubmitHandler<SignupFormType> = data => {
-    console.log(data);
+    mutation.mutate(data, {
+      onSuccess: () => {
+        toast.success('Account created successfully');
+        navigate('/');
+      },
+      onError: err => {
+        if (isAxiosError(err)) {
+          const errors = err.response?.data?.errors;
+          if (errors)
+            for (const error in errors)
+              setError(error, { message: errors[error][0] });
+
+          let errorMsg =
+            (err.response?.data?.message as string) || 'Registration failed!';
+          if (!err.response) errorMsg = 'Network error!';
+          toast.error(errorMsg);
+        }
+      },
+    });
   };
 
   return (
@@ -40,7 +69,7 @@ export default function Signup() {
           <CardDescription>Enter your email to create account</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-          <SignInButtons />
+          <SignInButtons disabled={mutation.isLoading} />
           <div className="relative z-10 text-center">
             <hr className="absolute left-0 right-0 top-1/2 -z-10" />
             <p className="inline-block bg-white px-4 text-sm uppercase text-muted-foreground">
@@ -52,6 +81,7 @@ export default function Signup() {
             type="text"
             className="text-slate-600"
             errorMessage={errors.name?.message}
+            disabled={mutation.isLoading}
             {...register('name')}
           />
           <InputField
@@ -59,6 +89,7 @@ export default function Signup() {
             type="email"
             className="text-slate-600"
             errorMessage={errors.email?.message}
+            disabled={mutation.isLoading}
             {...register('email')}
           />
           <div className="relative">
@@ -67,6 +98,7 @@ export default function Signup() {
               type="password"
               className="text-slate-600"
               errorMessage={errors.password?.message}
+              disabled={mutation.isLoading}
               {...register('password')}
             />
             <PasswordInfoCard className="absolute -top-[1px] left-[73px]" />
@@ -77,13 +109,18 @@ export default function Signup() {
               type="password"
               className="text-slate-600"
               errorMessage={errors.cPassword?.message}
+              disabled={mutation.isLoading}
               {...register('cPassword')}
             />
             <PasswordInfoCard className="absolute -top-[1px] left-[130px]" />
           </div>
         </CardContent>
         <CardFooter className="flex-col gap-3">
-          <Button type="submit" className="w-full">
+          <Button
+            type="submit"
+            className="w-full"
+            isLoading={mutation.isLoading}
+          >
             Sign Up
           </Button>
           <div className="flex justify-center gap-2 text-sm">

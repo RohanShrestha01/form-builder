@@ -6,7 +6,7 @@ export const globalErrorHandler: ErrorRequestHandler = (
   res,
   _next,
 ) => {
-  const { message, data, isOperational } = err;
+  const { message, data, errors, isOperational } = err;
   err.statusCode = isOperational ? err.statusCode || 500 : 500;
   err.status = isOperational ? err.status || 'error' : 'error';
 
@@ -16,5 +16,6 @@ export const globalErrorHandler: ErrorRequestHandler = (
     status: err.status,
     message: isOperational ? message : 'Something went wrong!',
     data,
+    errors,
   });
 };
