@@ -4,6 +4,7 @@ import { sign, verify } from 'jsonwebtoken';
 import User from '../models/userModel';
 import catchAsyncError from '../utils/catchAsyncError';
 import AppError from '../utils/appError';
+import { accessTokenExpiresIn } from '../utils/constants';
 
 const refreshTokenHandler = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -21,7 +22,7 @@ const refreshTokenHandler = catchAsyncError(
         { id: foundUser._id.toString() },
         process.env.ACCESS_TOKEN_SECRET!,
         {
-          expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN,
+          expiresIn: accessTokenExpiresIn,
         },
       );
 

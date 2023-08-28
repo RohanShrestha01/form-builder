@@ -6,14 +6,13 @@ import userRouter from './routes/userRoutes';
 import AppError from './utils/appError';
 import { globalErrorHandler } from './controllers/errorController';
 import verifyJWT from './middleware/verifyJWT';
+import { allowedOrigins } from './utils/constants';
+import credentials from './middleware/credentials';
 
 const app: Application = express();
 
-app.use(
-  cors({
-    origin: ['http://localhost:5173'],
-  }),
-);
+app.use(credentials);
+app.use(cors({ origin: allowedOrigins }));
 app.use(cookieParser());
 app.use(express.json());
 

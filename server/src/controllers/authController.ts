@@ -6,15 +6,20 @@ import { sign } from 'jsonwebtoken';
 import User from '../models/userModel';
 import catchAsyncError from '../utils/catchAsyncError';
 import AppError from '../utils/appError';
+import {
+  accessTokenExpiresIn,
+  cookieOptions,
+  refreshTokenExpiresIn,
+} from '../utils/constants';
 
 const signAccessToken = (id: string) =>
   sign({ id }, process.env.ACCESS_TOKEN_SECRET!, {
-    expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN,
+    expiresIn: accessTokenExpiresIn,
   });
 
 const signRefreshToken = (id: string) =>
   sign({ id }, process.env.REFRESH_TOKEN_SECRET!, {
-    expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN,
+    expiresIn: refreshTokenExpiresIn,
   });
 
 export const signUp = catchAsyncError(
@@ -46,10 +51,7 @@ export const signUp = catchAsyncError(
     newUser.refreshToken = refreshToken;
     await newUser.save();
 
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    res.cookie('refreshToken', refreshToken, cookieOptions);
 
     res.status(201).json({
       status: 'success',
@@ -81,10 +83,7 @@ export const login = catchAsyncError(
     user.refreshToken = refreshToken;
     await user.save();
 
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    res.cookie('refreshToken', refreshToken, cookieOptions);
 
     res.status(200).json({
       status: 'success',
@@ -100,3 +99,20 @@ export const login = catchAsyncError(
     });
   },
 );
+
+export const logout = async (req: Request, res: Response) => {
+  const { refreshToken } = req.cookies;
+  if (!refreshToken) return res.sendStatus(204);
+
+  const foundUser = await User.findOne({ refreshToken }).exec();
+  if (!foundUser) {
+    res.clearCookie('refreshToken', cookieOptions);
+    return res.sendStatus(204);
+  }
+
+  foundUser.refreshToken = '';
+  await foundUser.save();
+
+  res.clearCookie('refreshToken', cookieOptions);
+  res.sendStatus(204);
+};
