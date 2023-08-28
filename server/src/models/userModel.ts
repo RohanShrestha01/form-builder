@@ -6,7 +6,7 @@ export interface IUser {
   avatar?: string;
   password: string;
   passwordChangedAt?: Date;
-  refreshToken?: string;
+  refreshToken: string[];
 }
 
 const userSchema = new Schema<IUser>(
@@ -29,7 +29,7 @@ const userSchema = new Schema<IUser>(
       select: false,
     },
     passwordChangedAt: Date,
-    refreshToken: String,
+    refreshToken: [String],
   },
   { timestamps: true },
 );

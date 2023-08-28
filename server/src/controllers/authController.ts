@@ -17,7 +17,7 @@ const signAccessToken = (id: string) =>
     expiresIn: accessTokenExpiresIn,
   });
 
-const signRefreshToken = (id: string) =>
+export const signRefreshToken = (id: string) =>
   sign({ id }, process.env.REFRESH_TOKEN_SECRET!, {
     expiresIn: refreshTokenExpiresIn,
   });
@@ -47,11 +47,11 @@ export const signUp = catchAsyncError(
 
     const newUser = await User.create({ name, email, password });
 
-    const refreshToken = signRefreshToken(newUser._id.toString());
-    newUser.refreshToken = refreshToken;
+    const newRefreshToken = signRefreshToken(newUser._id.toString());
+    newUser.refreshToken = [newRefreshToken];
     await newUser.save();
 
-    res.cookie('refreshToken', refreshToken, cookieOptions);
+    res.cookie('refreshToken', newRefreshToken, cookieOptions);
 
     res.status(201).json({
       status: 'success',
@@ -70,6 +70,7 @@ export const signUp = catchAsyncError(
 
 export const login = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
+    const { cookies } = req;
     const { email, password } = req.body;
 
     if (!email || !password)
@@ -79,11 +80,29 @@ export const login = catchAsyncError(
     if (!user || !(await compare(password, user.password)))
       return next(new AppError('Incorrect email or password!', 401));
 
-    const refreshToken = signRefreshToken(user._id.toString());
-    user.refreshToken = refreshToken;
+    const newRefreshToken = signRefreshToken(user._id.toString());
+    let newRefreshTokenArray = !cookies?.refreshToken
+      ? user.refreshToken
+      : user.refreshToken.filter(r => r !== cookies.refreshToken);
+    if (cookies?.refreshToken) {
+      /* For this scenario: 
+        1) User logs in but never uses refresh token and does not log out
+        2) Refresh token is stolen
+        3) If 1 and 2 happen, reuse detection is needed to clear all refresh tokens when user logs in 
+      */
+      const foundToken = await User.findOne({
+        refreshToken: cookies.refreshToken,
+      }).exec();
+      // Detected refresh token reuse
+      if (!foundToken) newRefreshTokenArray = [];
+
+      res.clearCookie('refreshToken', cookieOptions);
+    }
+
+    user.refreshToken = [...newRefreshTokenArray, newRefreshToken];
     await user.save();
 
-    res.cookie('refreshToken', refreshToken, cookieOptions);
+    res.cookie('refreshToken', newRefreshToken, cookieOptions);
 
     res.status(200).json({
       status: 'success',
@@ -110,7 +129,9 @@ export const logout = async (req: Request, res: Response) => {
     return res.sendStatus(204);
   }
 
-  foundUser.refreshToken = '';
+  foundUser.refreshToken = foundUser.refreshToken.filter(
+    r => r !== refreshToken,
+  );
   await foundUser.save();
 
   res.clearCookie('refreshToken', cookieOptions);
