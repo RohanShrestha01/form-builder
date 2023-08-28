@@ -9,12 +9,12 @@ import AppError from '../utils/appError';
 
 const signAccessToken = (id: string) =>
   sign({ id }, process.env.ACCESS_TOKEN_SECRET!, {
-    expiresIn: '1h',
+    expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN,
   });
 
 const signRefreshToken = (id: string) =>
   sign({ id }, process.env.REFRESH_TOKEN_SECRET!, {
-    expiresIn: '7d',
+    expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN,
   });
 
 export const signUp = catchAsyncError(
@@ -29,7 +29,7 @@ export const signUp = catchAsyncError(
         ),
       );
 
-    const user = await User.findOne({ email: result.data.email });
+    const user = await User.findOne({ email: result.data.email }).exec();
     if (user)
       return next(
         new AppError('User already exists!', 409, {
@@ -43,6 +43,9 @@ export const signUp = catchAsyncError(
     const newUser = await User.create({ name, email, password });
 
     const refreshToken = signRefreshToken(newUser._id.toString());
+    newUser.refreshToken = refreshToken;
+    await newUser.save();
+
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
@@ -52,7 +55,12 @@ export const signUp = catchAsyncError(
       status: 'success',
       accessToken: signAccessToken(newUser._id.toString()),
       data: {
-        user: newUser,
+        user: {
+          id: newUser._id,
+          name: newUser.name,
+          email: newUser.email,
+          avatar: newUser.avatar,
+        },
       },
     });
   },
@@ -65,11 +73,14 @@ export const login = catchAsyncError(
     if (!email || !password)
       return next(new AppError('Please provide email and password!', 400));
 
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ email }).select('+password').exec();
     if (!user || !(await compare(password, user.password)))
       return next(new AppError('Incorrect email or password!', 401));
 
     const refreshToken = signRefreshToken(user._id.toString());
+    user.refreshToken = refreshToken;
+    await user.save();
+
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
@@ -79,7 +90,12 @@ export const login = catchAsyncError(
       status: 'success',
       accessToken: signAccessToken(user._id.toString()),
       data: {
-        user,
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          avatar: user.avatar,
+        },
       },
     });
   },

@@ -1,8 +1,9 @@
 import type { NextFunction, Request } from 'express';
 import { verify } from 'jsonwebtoken';
-import AppError from 'utils/appError';
-import catchAsyncError from 'utils/catchAsyncError';
+
 import User from '../models/userModel';
+import catchAsyncError from '../utils/catchAsyncError';
+import AppError from '../utils/appError';
 
 const verifyJWT = catchAsyncError(
   async (req: Request, _, next: NextFunction) => {
