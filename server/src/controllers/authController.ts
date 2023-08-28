@@ -7,9 +7,14 @@ import User from '../models/userModel';
 import catchAsyncError from '../utils/catchAsyncError';
 import AppError from '../utils/appError';
 
-const signToken = (id: string) =>
-  sign({ id }, process.env.JWT_SECRET!, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
+const signAccessToken = (id: string) =>
+  sign({ id }, process.env.ACCESS_TOKEN_SECRET!, {
+    expiresIn: '1h',
+  });
+
+const signRefreshToken = (id: string) =>
+  sign({ id }, process.env.REFRESH_TOKEN_SECRET!, {
+    expiresIn: '7d',
   });
 
 export const signUp = catchAsyncError(
@@ -27,7 +32,7 @@ export const signUp = catchAsyncError(
     const user = await User.findOne({ email: result.data.email });
     if (user)
       return next(
-        new AppError('User already exists!', 400, {
+        new AppError('User already exists!', 409, {
           email: ['Email already exists'],
         }),
       );
@@ -37,9 +42,15 @@ export const signUp = catchAsyncError(
 
     const newUser = await User.create({ name, email, password });
 
+    const refreshToken = signRefreshToken(newUser._id.toString());
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
     res.status(201).json({
       status: 'success',
-      token: signToken(newUser._id.toString()),
+      accessToken: signAccessToken(newUser._id.toString()),
       data: {
         user: newUser,
       },
@@ -58,9 +69,18 @@ export const login = catchAsyncError(
     if (!user || !(await compare(password, user.password)))
       return next(new AppError('Incorrect email or password!', 401));
 
+    const refreshToken = signRefreshToken(user._id.toString());
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
     res.status(200).json({
       status: 'success',
-      token: signToken(user._id.toString()),
+      accessToken: signAccessToken(user._id.toString()),
+      data: {
+        user,
+      },
     });
   },
 );

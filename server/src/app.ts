@@ -1,6 +1,5 @@
 import express, { Application } from 'express';
 import cors from 'cors';
-import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 
 import userRouter from './routes/userRoutes';
@@ -9,9 +8,13 @@ import { globalErrorHandler } from './controllers/errorController';
 
 const app: Application = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ['http://localhost:5173'],
+  }),
+);
 app.use(cookieParser());
-app.use(bodyParser.json());
+app.use(express.json());
 
 app.use('/api/v1/users', userRouter);
 
