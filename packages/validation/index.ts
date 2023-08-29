@@ -59,3 +59,16 @@ export const changePasswordSchema = z
     path: ['cNewPassword'],
     message: 'New password and Confirm password must match',
   });
+
+export const userProfileSchema = z.object({
+  name: z
+    .string({ required_error: 'Please tell us your name' })
+    .trim()
+    .min(1, 'Please tell us your name')
+    .max(30)
+    .optional(),
+  email: z
+    .string({ required_error: 'Please provide your email' })
+    .email('Please enter a valid email')
+    .optional(),
+});

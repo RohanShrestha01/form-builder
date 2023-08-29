@@ -1,6 +1,9 @@
 import type { NextFunction, Request, Response } from 'express';
 import catchAsyncError from '../utils/catchAsyncError';
-import { changePasswordSchema } from '@form-builder/validation';
+import {
+  changePasswordSchema,
+  userProfileSchema,
+} from '@form-builder/validation';
 import AppError from '../utils/appError';
 import User from '../models/userModel';
 import { compare, hash } from 'bcrypt';
@@ -36,6 +39,43 @@ export const changePassword = catchAsyncError(
     res.status(200).json({
       status: 'success',
       message: 'Password changed successfully',
+    });
+  },
+);
+
+export const updateProfile = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    // Validate user profile fields
+    const result = await userProfileSchema.safeParseAsync(req.body);
+    if (!result.success)
+      return next(
+        new AppError(
+          'Validation failed!',
+          400,
+          result.error.flatten().fieldErrors,
+        ),
+      );
+
+    const { name, email } = result.data;
+    const updatedUser = await User.findByIdAndUpdate(
+      req.userId,
+      {
+        name,
+        email,
+      },
+      { new: true },
+    );
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        user: {
+          id: updatedUser?._id,
+          name: updatedUser?.name,
+          email: updatedUser?.email,
+          avatar: updatedUser?.avatar,
+        },
+      },
     });
   },
 );
