@@ -18,7 +18,7 @@ const sendEmail = async (options: Options) => {
   });
 
   const mailOptions = {
-    from: 'support@formbuilder.com',
+    from: 'Form Builder <support@formbuilder.com>',
     to: options.email,
     subject: options.subject,
     text: options.message,

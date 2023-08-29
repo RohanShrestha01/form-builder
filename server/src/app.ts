@@ -3,6 +3,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
 import authRouter from './routes/authRoutes';
+import userRouter from './routes/userRoutes';
 import AppError from './utils/appError';
 import { globalErrorHandler } from './controllers/errorController';
 import verifyJWT from './middleware/verifyJWT';
@@ -19,6 +20,8 @@ app.use(express.json());
 app.use('/api/v1/auth', authRouter);
 
 app.use(verifyJWT);
+
+app.use('/api/v1/user', userRouter);
 
 app.all('*', (req, _res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

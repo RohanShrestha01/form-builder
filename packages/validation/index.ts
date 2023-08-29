@@ -1,5 +1,16 @@
 import z from 'zod';
 
+const password = z
+  .string({ required_error: 'Please provide a password' })
+  .regex(new RegExp('.*[A-Z].*'), 'Must contain a uppercase character')
+  .regex(new RegExp('.*[a-z].*'), 'Must contain a lowercase character')
+  .regex(new RegExp('.*\\d.*'), 'Must contain a number')
+  .regex(
+    new RegExp('.*[`~<>?,./!@#$%^&*()\\-_+="\'|{}\\[\\];:\\\\].*'),
+    'Must contain a special character',
+  )
+  .min(8, 'Password must be at least 8 characters');
+
 export const registerSchema = z
   .object({
     name: z
@@ -10,16 +21,7 @@ export const registerSchema = z
     email: z
       .string({ required_error: 'Please provide your email' })
       .email('Please enter a valid email'),
-    password: z
-      .string({ required_error: 'Please provide a password' })
-      .min(8, 'Password must be at least 8 characters')
-      .regex(new RegExp('.*[A-Z].*'), 'Must contain a uppercase character')
-      .regex(new RegExp('.*[a-z].*'), 'Must contain a lowercase character')
-      .regex(new RegExp('.*\\d.*'), 'Must contain a number')
-      .regex(
-        new RegExp('.*[`~<>?,./!@#$%^&*()\\-_+="\'|{}\\[\\];:\\\\].*'),
-        'Must contain a special character',
-      ),
+    password,
     cPassword: z.string({ required_error: 'Please confirm your password' }),
   })
   .refine(({ password, cPassword }) => password === cPassword, {
@@ -35,16 +37,20 @@ export const forgotPasswordSchema = z.object({
 
 export const resetPasswordSchema = z
   .object({
-    newPassword: z
-      .string({ required_error: 'Please provide new password' })
-      .regex(new RegExp('.*[A-Z].*'), 'Must contain a uppercase character')
-      .regex(new RegExp('.*[a-z].*'), 'Must contain a lowercase character')
-      .regex(new RegExp('.*\\d.*'), 'Must contain a number')
-      .regex(
-        new RegExp('.*[`~<>?,./!@#$%^&*()\\-_+="\'|{}\\[\\];:\\\\].*'),
-        'Must contain a special character',
-      )
-      .min(8, 'Password must be at least 8 characters'),
+    newPassword: password,
+    cNewPassword: z.string({
+      required_error: 'Please confirm your new password',
+    }),
+  })
+  .refine(({ newPassword, cNewPassword }) => newPassword === cNewPassword, {
+    path: ['cNewPassword'],
+    message: 'New password and Confirm password must match',
+  });
+
+export const changePasswordSchema = z
+  .object({
+    oldPassword: z.string({ required_error: 'Please provide old password' }),
+    newPassword: password,
     cNewPassword: z.string({
       required_error: 'Please confirm your new password',
     }),

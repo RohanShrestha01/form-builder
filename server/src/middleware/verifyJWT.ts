@@ -39,10 +39,9 @@ const verifyJWT = catchAsyncError(
               401,
             ),
           );
-
-        req.user = user.toObject();
       });
 
+      req.userId = id;
       next();
     });
   },
