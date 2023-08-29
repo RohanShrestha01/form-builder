@@ -25,7 +25,7 @@ export default function Login() {
   const navigate = useNavigate();
 
   const mutation = useMutation({
-    mutationFn: (data: FormType) => axios.post('/users/login', data),
+    mutationFn: (data: FormType) => axios.post('/auth/login', data),
   });
 
   const { register, handleSubmit } = useForm<FormType>();

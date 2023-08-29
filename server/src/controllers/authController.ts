@@ -1,6 +1,11 @@
+import crypto from 'crypto';
 import { type Response, type Request, type NextFunction } from 'express';
 import { hash, compare } from 'bcrypt';
-import { registerSchema } from '@form-builder/validation';
+import {
+  forgotPasswordSchema,
+  registerSchema,
+  resetPasswordSchema,
+} from '@form-builder/validation';
 import { sign } from 'jsonwebtoken';
 
 import User from '../models/userModel';
@@ -11,6 +16,7 @@ import {
   cookieOptions,
   refreshTokenExpiresIn,
 } from '../utils/constants';
+import sendEmail from '../utils/sendEmail';
 
 const signAccessToken = (id: string) =>
   sign({ id }, process.env.ACCESS_TOKEN_SECRET!, {
@@ -34,8 +40,8 @@ export const signUp = catchAsyncError(
         ),
       );
 
-    const user = await User.findOne({ email: result.data.email }).exec();
-    if (user)
+    const foundUser = await User.findOne({ email: result.data.email }).exec();
+    if (foundUser)
       return next(
         new AppError('User already exists!', 409, {
           email: ['Email already exists'],
@@ -76,14 +82,14 @@ export const login = catchAsyncError(
     if (!email || !password)
       return next(new AppError('Please provide email and password!', 400));
 
-    const user = await User.findOne({ email }).select('+password').exec();
-    if (!user || !(await compare(password, user.password)))
+    const foundUser = await User.findOne({ email }).select('+password').exec();
+    if (!foundUser || !(await compare(password, foundUser.password)))
       return next(new AppError('Incorrect email or password!', 401));
 
-    const newRefreshToken = signRefreshToken(user._id.toString());
+    const newRefreshToken = signRefreshToken(foundUser._id.toString());
     let newRefreshTokenArray = !cookies?.refreshToken
-      ? user.refreshToken
-      : user.refreshToken.filter(r => r !== cookies.refreshToken);
+      ? foundUser.refreshToken
+      : foundUser.refreshToken.filter(r => r !== cookies.refreshToken);
     if (cookies?.refreshToken) {
       /* For this scenario: 
         1) User logs in but never uses refresh token and does not log out
@@ -99,20 +105,20 @@ export const login = catchAsyncError(
       res.clearCookie('refreshToken', cookieOptions);
     }
 
-    user.refreshToken = [...newRefreshTokenArray, newRefreshToken];
-    await user.save();
+    foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
+    await foundUser.save();
 
     res.cookie('refreshToken', newRefreshToken, cookieOptions);
 
     res.status(200).json({
       status: 'success',
-      accessToken: signAccessToken(user._id.toString()),
+      accessToken: signAccessToken(foundUser._id.toString()),
       data: {
         user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          avatar: user.avatar,
+          id: foundUser._id,
+          name: foundUser.name,
+          email: foundUser.email,
+          avatar: foundUser.avatar,
         },
       },
     });
@@ -137,3 +143,110 @@ export const logout = async (req: Request, res: Response) => {
   res.clearCookie('refreshToken', cookieOptions);
   res.sendStatus(204);
 };
+
+export const forgotPassword = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    // Validate email
+    const result = await forgotPasswordSchema.safeParseAsync(req.body);
+    if (!result.success)
+      return next(
+        new AppError(
+          'Validation failed!',
+          400,
+          result.error.flatten().fieldErrors,
+        ),
+      );
+
+    // Get user based on email
+    const foundUser = await User.findOne({ email: result.data.email }).exec();
+    if (!foundUser)
+      return next(
+        new AppError('There is no user with that email address!', 404),
+      );
+
+    // Generate random reset token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    foundUser.passwordResetToken = crypto
+      .createHash('sha256')
+      .update(resetToken)
+      .digest('hex');
+    foundUser.passwordResetExpires = new Date(Date.now() + 10 * 60 * 1000);
+    await foundUser.save();
+
+    // Send it to user's email
+    const resetUrl = `${req.protocol}://${req.get(
+      'host',
+    )}/reset-password/${resetToken}`;
+
+    const message =
+      'You are receiving this email because you have just requested to reset your Form Builder password. Please click on the link below or copy and paste the URL in a new browser window to reset your password:\n\n' +
+      `${resetUrl}\n\n` +
+      'If you did not request this, please ignore this email and your password will remain unchanged.';
+
+    try {
+      await sendEmail({
+        email: foundUser.email,
+        subject:
+          'Password reset token for Form Builder account (valid for 10 minutes)',
+        message,
+      });
+
+      res.status(200).json({
+        status: 'success',
+        message: 'Email sent successfully',
+      });
+    } catch (err) {
+      foundUser.passwordResetToken = undefined;
+      foundUser.passwordResetExpires = undefined;
+      await foundUser.save();
+
+      return next(
+        new AppError(
+          'There was an error sending the email. Try again later!',
+          500,
+        ),
+      );
+    }
+  },
+);
+
+export const resetPassword = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    // Get user based on the token
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(req.params.token)
+      .digest('hex');
+
+    const foundUser = await User.findOne({
+      passwordResetToken: hashedToken,
+      passwordResetExpires: { $gt: Date.now() },
+    }).exec();
+
+    // If token has not expired, and there is user, and success in validation, set the new password
+    if (!foundUser)
+      return next(new AppError('Token is invalid or has expired!', 400));
+
+    // Validate password and confirm password
+    const result = await resetPasswordSchema.safeParseAsync(req.body);
+    if (!result.success)
+      return next(
+        new AppError(
+          'Validation failed!',
+          400,
+          result.error.flatten().fieldErrors,
+        ),
+      );
+
+    foundUser.password = await hash(result.data.newPassword, 12);
+    foundUser.passwordResetToken = undefined;
+    foundUser.passwordResetExpires = undefined;
+    foundUser.passwordChangedAt = new Date(Date.now());
+    await foundUser.save();
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Password reset successfully',
+    });
+  },
+);

@@ -7,6 +7,8 @@ export interface IUser {
   password: string;
   passwordChangedAt?: Date;
   refreshToken: string[];
+  passwordResetToken?: string;
+  passwordResetExpires?: Date;
 }
 
 const userSchema = new Schema<IUser>(
@@ -30,6 +32,8 @@ const userSchema = new Schema<IUser>(
     },
     passwordChangedAt: Date,
     refreshToken: [String],
+    passwordResetToken: String,
+    passwordResetExpires: Date,
   },
   { timestamps: true },
 );

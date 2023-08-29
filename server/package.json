@@ -16,6 +16,7 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.1",
     "mongoose": "^7.4.2",
+    "nodemailer": "^6.9.4",
     "zod": "^3.21.4"
   },
   "devDependencies": {
@@ -25,6 +26,7 @@
     "@types/express": "^4.17.17",
     "@types/jsonwebtoken": "^9.0.2",
     "@types/node": "^20.4.8",
+    "@types/nodemailer": "^6.4.9",
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"

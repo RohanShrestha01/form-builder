@@ -2,7 +2,7 @@ import express, { Application } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
-import userRouter from './routes/userRoutes';
+import authRouter from './routes/authRoutes';
 import AppError from './utils/appError';
 import { globalErrorHandler } from './controllers/errorController';
 import verifyJWT from './middleware/verifyJWT';
@@ -16,7 +16,7 @@ app.use(cors({ origin: allowedOrigins }));
 app.use(cookieParser());
 app.use(express.json());
 
-app.use('/api/v1/users', userRouter);
+app.use('/api/v1/auth', authRouter);
 
 app.use(verifyJWT);
 
