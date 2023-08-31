@@ -125,14 +125,18 @@ export const login = catchAsyncError(
   },
 );
 
-export const logout = async (req: Request, res: Response) => {
+export const logout = catchAsyncError(async (req: Request, res: Response) => {
   const { refreshToken } = req.cookies;
-  if (!refreshToken) return res.sendStatus(204);
+  if (!refreshToken) {
+    res.sendStatus(204);
+    return;
+  }
 
   const foundUser = await User.findOne({ refreshToken }).exec();
   if (!foundUser) {
     res.clearCookie('refreshToken', cookieOptions);
-    return res.sendStatus(204);
+    res.sendStatus(204);
+    return;
   }
 
   foundUser.refreshToken = foundUser.refreshToken.filter(
@@ -142,7 +146,7 @@ export const logout = async (req: Request, res: Response) => {
 
   res.clearCookie('refreshToken', cookieOptions);
   res.sendStatus(204);
-};
+});
 
 export const forgotPassword = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -241,7 +245,7 @@ export const resetPassword = catchAsyncError(
     foundUser.password = await hash(result.data.newPassword, 12);
     foundUser.passwordResetToken = undefined;
     foundUser.passwordResetExpires = undefined;
-    foundUser.passwordChangedAt = new Date(Date.now());
+    foundUser.passwordChangedAt = new Date();
     await foundUser.save();
 
     res.status(200).json({

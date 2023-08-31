@@ -33,7 +33,7 @@ export const changePassword = catchAsyncError(
 
     // If correct, update password
     foundUser.password = await hash(newPassword, 12);
-    foundUser.passwordChangedAt = new Date(Date.now());
+    foundUser.passwordChangedAt = new Date();
     await foundUser.save();
 
     res.status(200).json({
@@ -77,5 +77,16 @@ export const updateProfile = catchAsyncError(
         },
       },
     });
+  },
+);
+
+export const deleteAccount = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    await User.findByIdAndUpdate(req.userId, {
+      isDeleted: true,
+      deletedAt: new Date(),
+    });
+
+    res.sendStatus(204);
   },
 );
