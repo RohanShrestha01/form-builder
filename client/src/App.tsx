@@ -14,7 +14,7 @@ export default function App() {
         <Route path="sso/login" element={<SSOLogin />} />
         <Route path="signup" element={<Signup />} />
         <Route path="recover-password" element={<RecoverPassword />} />
-        <Route path="reset-password" element={<ResetPassword />} />
+        <Route path="reset-password/:token" element={<ResetPassword />} />
       </Route>
     </Routes>
   );

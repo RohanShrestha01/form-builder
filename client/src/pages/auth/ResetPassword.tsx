@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Button } from '../../components/ui/Button';
 import {
   Card,
@@ -9,10 +9,61 @@ import {
   CardTitle,
 } from '../../components/ui/Card';
 import InputField from '../../components/shared/InputField';
+import { z } from 'zod';
+import { resetPasswordSchema } from '@form-builder/validation';
+import { type SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
+import axios from '../../lib/axios';
+import { toast } from 'react-hot-toast';
+import { isAxiosError } from 'axios';
+
+type ResetFormType = z.infer<typeof resetPasswordSchema>;
 
 export default function ResetPassword() {
+  const { token } = useParams();
+  const navigate = useNavigate();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm<ResetFormType>({
+    resolver: zodResolver(resetPasswordSchema),
+  });
+
+  const mutation = useMutation({
+    mutationFn: (data: ResetFormType) =>
+      axios.patch(`/auth/reset-password/${token}`, data),
+  });
+
+  const onSubmit: SubmitHandler<ResetFormType> = data => {
+    mutation.mutate(data, {
+      onSuccess: () => {
+        toast.success('Password reset successfully');
+        navigate('/login');
+      },
+      onError: err => {
+        if (isAxiosError(err)) {
+          const errors = err.response?.data?.errors;
+          if (errors)
+            for (const error in errors)
+              setError(error as 'newPassword' | 'cNewPassword', {
+                message: errors[error][0],
+              });
+
+          let errorMsg =
+            (err.response?.data?.message as string) || 'Password Reset failed!';
+          if (!err.response) errorMsg = 'Network error!';
+          toast.error(errorMsg);
+        }
+      },
+    });
+  };
+
   return (
-    <form>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Card>
         <CardHeader>
           <CardTitle>Reset Account</CardTitle>
@@ -21,19 +72,27 @@ export default function ResetPassword() {
         <CardContent className="flex flex-col gap-4">
           <InputField
             label="New Password"
-            name="newPassword"
             type="password"
             className="text-slate-600"
+            errorMessage={errors.newPassword?.message}
+            disabled={mutation.isLoading}
+            {...register('newPassword')}
           />
           <InputField
             label="Confirm Password"
-            name="cPassword"
             type="password"
             className="text-slate-600"
+            errorMessage={errors.cNewPassword?.message}
+            disabled={mutation.isLoading}
+            {...register('cNewPassword')}
           />
         </CardContent>
         <CardFooter className="flex-col gap-3">
-          <Button type="submit" className="w-full">
+          <Button
+            type="submit"
+            className="w-full"
+            isLoading={mutation.isLoading}
+          >
             Reset Password
           </Button>
           <div className="flex justify-center gap-2 text-sm">

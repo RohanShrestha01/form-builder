@@ -7,6 +7,7 @@ import {
 import AppError from '../utils/appError';
 import User from '../models/userModel';
 import { compare, hash } from 'bcrypt';
+import { cookieOptions } from '../utils/constants';
 
 export const changePassword = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -34,7 +35,10 @@ export const changePassword = catchAsyncError(
     // If correct, update password
     foundUser.password = await hash(newPassword, 12);
     foundUser.passwordChangedAt = new Date();
+    foundUser.refreshToken = [];
     await foundUser.save();
+
+    res.clearCookie('refreshToken', cookieOptions);
 
     res.status(200).json({
       status: 'success',
@@ -81,7 +85,7 @@ export const updateProfile = catchAsyncError(
 );
 
 export const deleteAccount = catchAsyncError(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response) => {
     await User.findByIdAndUpdate(req.userId, {
       isDeleted: true,
       deletedAt: new Date(),

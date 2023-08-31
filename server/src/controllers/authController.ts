@@ -178,9 +178,7 @@ export const forgotPassword = catchAsyncError(
     await foundUser.save();
 
     // Send it to user's email
-    const resetUrl = `${req.protocol}://${req.get(
-      'host',
-    )}/reset-password/${resetToken}`;
+    const resetUrl = `${req.header('Referer')}reset-password/${resetToken}`;
 
     const message =
       'You are receiving this email because you have just requested to reset your Form Builder password. Please click on the link below or copy and paste the URL in a new browser window to reset your password:\n\n' +

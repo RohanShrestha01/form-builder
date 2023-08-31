@@ -9,10 +9,59 @@ import {
   CardTitle,
 } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
+import { type SubmitHandler, useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { forgotPasswordSchema } from '@form-builder/validation';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
+import axios from '../../lib/axios';
+import { toast } from 'react-hot-toast';
+import { isAxiosError } from 'axios';
+
+type RecoverFormType = z.infer<typeof forgotPasswordSchema>;
 
 export default function RecoverPassword() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+    reset,
+  } = useForm<RecoverFormType>({
+    resolver: zodResolver(forgotPasswordSchema),
+  });
+
+  const mutation = useMutation({
+    mutationFn: (data: RecoverFormType) =>
+      axios.post('/auth/forgot-password', data),
+  });
+
+  const onSubmit: SubmitHandler<RecoverFormType> = data => {
+    mutation.mutate(data, {
+      onSuccess: () => {
+        toast.success('Email sent successfully');
+        reset();
+      },
+      onError: err => {
+        if (isAxiosError(err)) {
+          const errors = err.response?.data?.errors;
+          if (errors)
+            for (const error in errors)
+              setError(error as 'email', {
+                message: errors[error][0],
+              });
+
+          let errorMsg =
+            (err.response?.data?.message as string) || 'Request failed!';
+          if (!err.response) errorMsg = 'Network error!';
+          toast.error(errorMsg);
+        }
+      },
+    });
+  };
+
   return (
-    <form>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Card>
         <CardHeader>
           <CardTitle>Recover Account</CardTitle>
@@ -21,14 +70,20 @@ export default function RecoverPassword() {
         <CardContent>
           <InputField
             label="Email"
-            name="email"
             type="email"
             className="text-slate-600"
+            errorMessage={errors.email?.message}
+            disabled={mutation.isLoading}
+            {...register('email')}
           />
         </CardContent>
         <CardFooter className="flex-col gap-3">
-          <Button type="submit" className="w-full">
-            Request Verification Code
+          <Button
+            type="submit"
+            className="w-full"
+            isLoading={mutation.isLoading}
+          >
+            Recover Password
           </Button>
           <div className="flex justify-center gap-2 text-sm">
             <p className="text-muted-foreground">Remembered your password?</p>
