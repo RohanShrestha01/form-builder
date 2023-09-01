@@ -18,7 +18,7 @@ export default function PasswordInfoCard({
       >
         <InfoIcon className="h-4 w-4" />
       </HoverCardTrigger>
-      <HoverCardContent className="bg-primary-background border-primary px-4 py-2">
+      <HoverCardContent className="border-primary bg-primary-background px-4 py-2">
         <h3 className="text-sm font-medium">Password Must</h3>
         <ul className="mt-1 list-disc px-4 text-[13px]">
           <li>Be at least 8 characters</li>
