@@ -7,11 +7,12 @@ import {
   signUp,
 } from '../controllers/authController';
 import refreshTokenHandler from '../controllers/refreshTokenController';
+import loginLimiter from '../middleware/loginLimiter';
 
 const router = Router();
 
 router.post('/signup', signUp);
-router.post('/login', login);
+router.post('/login', loginLimiter, login);
 router.get('/logout', logout);
 
 router.post('/forgot-password', forgotPassword);
