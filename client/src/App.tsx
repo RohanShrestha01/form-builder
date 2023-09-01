@@ -5,6 +5,9 @@ import Signup from './pages/auth/Signup';
 import RecoverPassword from './pages/auth/RecoverPassword';
 import SSOLogin from './pages/auth/SSOLogin';
 import ResetPassword from './pages/auth/ResetPassword';
+import RequireAuth from './components/auth/RequireAuth';
+import HomePage from './pages/HomePage';
+import BaseLayout from './layouts/BaseLayout';
 
 export default function App() {
   return (
@@ -15,6 +18,11 @@ export default function App() {
         <Route path="signup" element={<Signup />} />
         <Route path="recover-password" element={<RecoverPassword />} />
         <Route path="reset-password/:token" element={<ResetPassword />} />
+      </Route>
+      <Route element={<RequireAuth />}>
+        <Route element={<BaseLayout />}>
+          <Route index element={<HomePage />} />
+        </Route>
       </Route>
     </Routes>
   );

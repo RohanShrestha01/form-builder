@@ -36,7 +36,10 @@ export default function Signup() {
   });
 
   const mutation = useMutation({
-    mutationFn: (data: SignupFormType) => axios.post('/auth/signup', data),
+    mutationFn: (data: SignupFormType) =>
+      axios.post('/auth/signup', data, {
+        withCredentials: true,
+      }),
   });
 
   const onSubmit: SubmitHandler<SignupFormType> = data => {

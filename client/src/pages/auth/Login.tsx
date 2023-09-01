@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import InputField from '../../components/shared/InputField';
 import { Button } from '../../components/ui/Button';
 import {
@@ -23,9 +23,13 @@ interface FormType {
 
 export default function Login() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const mutation = useMutation({
-    mutationFn: (data: FormType) => axios.post('/auth/login', data),
+    mutationFn: (data: FormType) =>
+      axios.post('/auth/login', data, {
+        withCredentials: true,
+      }),
   });
 
   const { register, handleSubmit } = useForm<FormType>();
@@ -34,7 +38,7 @@ export default function Login() {
     mutation.mutate(data, {
       onSuccess: () => {
         toast.success('Logged in successfully');
-        navigate('/');
+        navigate(searchParams.get('callbackUrl') ?? '/', { replace: true });
       },
       onError: err => {
         if (isAxiosError(err)) {
