@@ -13,6 +13,7 @@ import verifyJWT from './middleware/verifyJWT';
 import { allowedOrigins } from './utils/constants';
 import credentials from './middleware/credentials';
 import logger from './middleware/logger';
+import path from 'path';
 
 const app: Application = express();
 
@@ -24,6 +25,7 @@ app.use(logger);
 app.use(credentials);
 app.use(cors({ origin: allowedOrigins }));
 
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
 app.use(express.json({ limit: '10kb' }));
 
