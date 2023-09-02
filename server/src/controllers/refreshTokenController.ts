@@ -1,11 +1,11 @@
 import type { NextFunction, Request, Response } from 'express';
-import { sign, verify } from 'jsonwebtoken';
+import { verify } from 'jsonwebtoken';
 
 import User from '../models/userModel';
 import catchAsyncError from '../utils/catchAsyncError';
 import AppError from '../utils/appError';
-import { accessTokenExpiresIn, cookieOptions } from '../utils/constants';
-import { signRefreshToken } from './authController';
+import { cookieOptions } from '../utils/constants';
+import { signAccessToken, signRefreshToken } from './authController';
 
 const refreshTokenHandler = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -49,13 +49,7 @@ const refreshTokenHandler = catchAsyncError(
         if (err || foundUser._id.toString() !== (decoded as { id: string }).id)
           return next(new AppError('Invalid refresh token!', 403));
 
-        const accessToken = sign(
-          { id: foundUser._id.toString() },
-          process.env.ACCESS_TOKEN_SECRET!,
-          {
-            expiresIn: accessTokenExpiresIn,
-          },
-        );
+        const accessToken = signAccessToken(foundUser._id.toString());
 
         const newRefreshToken = signRefreshToken(foundUser._id.toString());
         foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];

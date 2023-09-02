@@ -8,6 +8,7 @@ import ResetPassword from './pages/auth/ResetPassword';
 import RequireAuth from './components/auth/RequireAuth';
 import HomePage from './pages/HomePage';
 import BaseLayout from './layouts/BaseLayout';
+import PersistLogin from './components/auth/PersistLogin';
 
 export default function App() {
   return (
@@ -19,9 +20,12 @@ export default function App() {
         <Route path="recover-password" element={<RecoverPassword />} />
         <Route path="reset-password/:token" element={<ResetPassword />} />
       </Route>
-      <Route element={<RequireAuth />}>
-        <Route element={<BaseLayout />}>
-          <Route index element={<HomePage />} />
+
+      <Route element={<PersistLogin />}>
+        <Route element={<RequireAuth />}>
+          <Route element={<BaseLayout />}>
+            <Route index element={<HomePage />} />
+          </Route>
         </Route>
       </Route>
     </Routes>

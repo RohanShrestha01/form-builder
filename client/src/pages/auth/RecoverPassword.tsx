@@ -17,10 +17,13 @@ import { useMutation } from '@tanstack/react-query';
 import axios from '../../lib/axios';
 import { toast } from 'react-hot-toast';
 import { isAxiosError } from 'axios';
+import useTitle from '../../hooks/useTitle';
 
 type RecoverFormType = z.infer<typeof forgotPasswordSchema>;
 
 export default function RecoverPassword() {
+  useTitle('Forgot Password?');
+
   const {
     register,
     handleSubmit,
@@ -33,7 +36,9 @@ export default function RecoverPassword() {
 
   const mutation = useMutation({
     mutationFn: (data: RecoverFormType) =>
-      axios.post('/auth/forgot-password', data),
+      axios.post('/auth/forgot-password', data, {
+        headers: { 'Content-Type': 'application/json' },
+      }),
   });
 
   const onSubmit: SubmitHandler<RecoverFormType> = data => {

@@ -15,6 +15,12 @@ import { useMutation } from '@tanstack/react-query';
 import axios from '@/lib/axios';
 import { toast } from 'react-hot-toast';
 import { isAxiosError } from 'axios';
+import { useCookies } from 'react-cookie';
+import { getEncryptedData } from '../../utils';
+import { cookieMaxAge } from '../../utils/constants';
+import { useAuth } from '../../contexts/AuthContext';
+import { useEffect } from 'react';
+import useTitle from '../../hooks/useTitle';
 
 interface FormType {
   email: string;
@@ -24,10 +30,18 @@ interface FormType {
 export default function Login() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const setCookie = useCookies(['userDetails'])[1];
+  const { setAuth, persist, setPersist } = useAuth();
+  useTitle('Sign In | Form Builder');
+
+  useEffect(() => {
+    localStorage.setItem('persist', JSON.stringify(persist));
+  }, [persist]);
 
   const mutation = useMutation({
     mutationFn: (data: FormType) =>
       axios.post('/auth/login', data, {
+        headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       }),
   });
@@ -36,7 +50,17 @@ export default function Login() {
 
   const onSubmit: SubmitHandler<FormType> = data => {
     mutation.mutate(data, {
-      onSuccess: () => {
+      onSuccess: res => {
+        setAuth({
+          accessToken: res.data.accessToken,
+          ...res.data.data.user,
+        });
+
+        setCookie('userDetails', getEncryptedData(res.data.data.user), {
+          path: '/',
+          maxAge: cookieMaxAge,
+        });
+
         toast.success('Logged in successfully');
         navigate(searchParams.get('callbackUrl') ?? '/', { replace: true });
       },
@@ -89,10 +113,12 @@ export default function Login() {
               <input
                 type="checkbox"
                 id="remember-me"
-                name="remember"
                 className="h-3.5 w-3.5 cursor-pointer accent-primary"
-                defaultChecked
                 disabled={mutation.isLoading}
+                checked={persist}
+                onChange={() => {
+                  setPersist(prev => !prev);
+                }}
               />
               <label
                 htmlFor="remember-me"

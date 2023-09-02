@@ -8,7 +8,7 @@ export default function RequireAuth() {
   const href =
     pathname === '/'
       ? '/login'
-      : `/login?callbackUrl=${encodeURIComponent(location.pathname)}`;
+      : `/login?callbackUrl=${encodeURIComponent(pathname)}`;
 
   return auth.accessToken ? <Outlet /> : <Navigate to={href} replace />;
 }

@@ -20,11 +20,19 @@ import PasswordInfoCard from '../../components/auth/PasswordInfoCard';
 import { useMutation } from '@tanstack/react-query';
 import axios from '@/lib/axios';
 import { isAxiosError } from 'axios';
+import { useAuth } from '../../contexts/AuthContext';
+import { useCookies } from 'react-cookie';
+import { getEncryptedData } from '../../utils';
+import { cookieMaxAge } from '../../utils/constants';
+import useTitle from '../../hooks/useTitle';
 
 type SignupFormType = z.infer<typeof registerSchema>;
 
 export default function Signup() {
   const navigate = useNavigate();
+  const setCookie = useCookies(['userDetails'])[1];
+  const { setAuth } = useAuth();
+  useTitle('Sign Up Free | Form Builder');
 
   const {
     register,
@@ -38,13 +46,24 @@ export default function Signup() {
   const mutation = useMutation({
     mutationFn: (data: SignupFormType) =>
       axios.post('/auth/signup', data, {
+        headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       }),
   });
 
   const onSubmit: SubmitHandler<SignupFormType> = data => {
     mutation.mutate(data, {
-      onSuccess: () => {
+      onSuccess: res => {
+        setAuth({
+          accessToken: res.data.accessToken,
+          ...res.data.data.user,
+        });
+
+        setCookie('userDetails', getEncryptedData(res.data.data.user), {
+          path: '/',
+          maxAge: cookieMaxAge,
+        });
+
         toast.success('Account created successfully');
         navigate('/');
       },

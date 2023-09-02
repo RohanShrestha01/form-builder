@@ -5,7 +5,7 @@ import { getDecryptedData } from '@/utils';
 
 export const initialAuthState = {
   accessToken: '',
-  idx: '',
+  id: '',
   fullName: '',
   email: '',
   avatar: '',
@@ -14,11 +14,15 @@ export const initialAuthState = {
 interface AuthContextType {
   auth: typeof initialAuthState;
   setAuth: React.Dispatch<React.SetStateAction<typeof initialAuthState>>;
+  persist: boolean;
+  setPersist: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AuthContext = createContext<AuthContextType>({
   auth: initialAuthState,
   setAuth: () => {},
+  persist: true,
+  setPersist: () => {},
 });
 
 export default function AuthProvider({
@@ -32,8 +36,13 @@ export default function AuthProvider({
     : initialAuthState;
   const [auth, setAuth] = useState(currentState);
 
+  const initialPersist = localStorage.getItem('persist');
+  const [persist, setPersist] = useState<boolean>(
+    initialPersist ? JSON.parse(initialPersist) : true,
+  );
+
   return (
-    <AuthContext.Provider value={{ auth, setAuth }}>
+    <AuthContext.Provider value={{ auth, setAuth, persist, setPersist }}>
       {children}
     </AuthContext.Provider>
   );

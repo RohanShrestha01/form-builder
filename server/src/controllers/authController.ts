@@ -18,7 +18,7 @@ import {
 } from '../utils/constants';
 import sendEmail from '../utils/sendEmail';
 
-const signAccessToken = (id: string) =>
+export const signAccessToken = (id: string) =>
   sign({ id }, process.env.ACCESS_TOKEN_SECRET!, {
     expiresIn: accessTokenExpiresIn,
   });

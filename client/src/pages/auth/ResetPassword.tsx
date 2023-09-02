@@ -17,12 +17,14 @@ import { useMutation } from '@tanstack/react-query';
 import axios from '../../lib/axios';
 import { toast } from 'react-hot-toast';
 import { isAxiosError } from 'axios';
+import useTitle from '../../hooks/useTitle';
 
 type ResetFormType = z.infer<typeof resetPasswordSchema>;
 
 export default function ResetPassword() {
   const { token } = useParams();
   const navigate = useNavigate();
+  useTitle('Reset Password');
 
   const {
     register,
@@ -35,7 +37,9 @@ export default function ResetPassword() {
 
   const mutation = useMutation({
     mutationFn: (data: ResetFormType) =>
-      axios.patch(`/auth/reset-password/${token}`, data),
+      axios.patch(`/auth/reset-password/${token}`, data, {
+        headers: { 'Content-Type': 'application/json' },
+      }),
   });
 
   const onSubmit: SubmitHandler<ResetFormType> = data => {
