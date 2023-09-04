@@ -6,7 +6,7 @@ import { getDecryptedData } from '@/utils';
 export const initialAuthState = {
   accessToken: '',
   id: '',
-  fullName: '',
+  name: '',
   email: '',
   avatar: '',
 };
