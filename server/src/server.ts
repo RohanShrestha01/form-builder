@@ -11,7 +11,8 @@ process.on('uncaughtException', err => {
 
 mongoose
   .connect(process.env.DATABASE!)
-  .then(() => console.log('DB connection successful!'));
+  .then(() => console.log('DB connection successful!'))
+  .catch(() => console.error('DB connection failed!'));
 
 const port = process.env.PORT || 8000;
 const server = app.listen(port, () => {
