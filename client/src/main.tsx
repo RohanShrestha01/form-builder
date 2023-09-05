@@ -7,7 +7,6 @@ import { CookiesProvider } from 'react-cookie';
 import { disableReactDevTools } from '@fvilers/disable-react-devtools';
 
 import App from './App.tsx';
-import { BrowserRouter } from 'react-router-dom';
 import AuthProvider from './contexts/AuthContext.tsx';
 
 if (process.env.NODE_ENV === 'production') {
@@ -18,16 +17,14 @@ const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <AuthProvider>
-        <CookiesProvider>
-          <QueryClientProvider client={queryClient}>
-            <App />
-            <Toaster position="bottom-center" />
-            <ReactQueryDevtools />
-          </QueryClientProvider>
-        </CookiesProvider>
-      </AuthProvider>
-    </BrowserRouter>
+    <AuthProvider>
+      <CookiesProvider>
+        <QueryClientProvider client={queryClient}>
+          <App />
+          <Toaster position="bottom-center" />
+          <ReactQueryDevtools />
+        </QueryClientProvider>
+      </CookiesProvider>
+    </AuthProvider>
   </React.StrictMode>,
 );

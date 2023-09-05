@@ -34,7 +34,7 @@ export default function UserNav() {
   const [open, setOpen] = useState(false);
 
   return (
-    <DropdownMenu open={open} onOpenChange={setOpen}>
+    <DropdownMenu modal={false} open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger className="outline-none">
         <UserAvatar className="cursor-pointer" />
       </DropdownMenuTrigger>

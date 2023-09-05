@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Login from './pages/auth/Login';
 import AuthLayout from './layouts/AuthLayout';
 import Signup from './pages/auth/Signup';
@@ -9,25 +9,57 @@ import RequireAuth from './components/auth/RequireAuth';
 import HomePage from './pages/HomePage';
 import BaseLayout from './layouts/BaseLayout';
 import PersistLogin from './components/auth/PersistLogin';
+import Error from './pages/Error';
+
+const router = createBrowserRouter([
+  {
+    element: <AuthLayout />,
+    errorElement: <Error />,
+    children: [
+      {
+        path: '/login',
+        element: <Login />,
+      },
+      {
+        path: '/sso/login',
+        element: <SSOLogin />,
+      },
+      {
+        path: '/signup',
+        element: <Signup />,
+      },
+      {
+        path: '/recover-password',
+        element: <RecoverPassword />,
+      },
+      {
+        path: '/reset-password/:token',
+        element: <ResetPassword />,
+      },
+    ],
+  },
+  {
+    element: <PersistLogin />,
+    errorElement: <Error />,
+    children: [
+      {
+        element: <RequireAuth />,
+        children: [
+          {
+            element: <BaseLayout />,
+            children: [
+              {
+                path: '/',
+                element: <HomePage />,
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+]);
 
 export default function App() {
-  return (
-    <Routes>
-      <Route element={<AuthLayout />}>
-        <Route path="login" element={<Login />} />
-        <Route path="sso/login" element={<SSOLogin />} />
-        <Route path="signup" element={<Signup />} />
-        <Route path="recover-password" element={<RecoverPassword />} />
-        <Route path="reset-password/:token" element={<ResetPassword />} />
-      </Route>
-
-      <Route element={<PersistLogin />}>
-        <Route element={<RequireAuth />}>
-          <Route element={<BaseLayout />}>
-            <Route index element={<HomePage />} />
-          </Route>
-        </Route>
-      </Route>
-    </Routes>
-  );
+  return <RouterProvider router={router} />;
 }
