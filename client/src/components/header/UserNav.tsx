@@ -10,6 +10,8 @@ import {
   DropdownMenuSeparator,
 } from '../ui/DropdownMenu';
 import { Link } from 'react-router-dom';
+import LogoutAlertDialog from '../shared/LogoutAlertDialog';
+import { useState } from 'react';
 
 const UserAvatar = ({ className }: { className?: string }) => {
   const { auth } = useAuth();
@@ -29,9 +31,10 @@ const UserAvatar = ({ className }: { className?: string }) => {
 
 export default function UserNav() {
   const { auth } = useAuth();
+  const [open, setOpen] = useState(false);
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger className="outline-none">
         <UserAvatar className="cursor-pointer" />
       </DropdownMenuTrigger>
@@ -52,10 +55,15 @@ export default function UserNav() {
             <span>Settings</span>
           </DropdownMenuItem>
         </Link>
-        <DropdownMenuItem className="gap-2 font-medium">
-          <LogOutIcon className="h-5 w-5" />
-          <span>Log out</span>
-        </DropdownMenuItem>
+        <LogoutAlertDialog closeHandler={() => setOpen(false)}>
+          <DropdownMenuItem
+            className="gap-2 font-medium focus:bg-red-100"
+            onSelect={e => e.preventDefault()}
+          >
+            <LogOutIcon className="h-5 w-5" />
+            <span>Log out</span>
+          </DropdownMenuItem>
+        </LogoutAlertDialog>
       </DropdownMenuContent>
     </DropdownMenu>
   );
