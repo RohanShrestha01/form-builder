@@ -31,7 +31,7 @@ export default {
           foreground: colors.slate[900],
         },
         destructive: {
-          DEFAULT: colors.red[500],
+          DEFAULT: colors.red[600],
           foreground: colors.slate[50],
         },
       },
