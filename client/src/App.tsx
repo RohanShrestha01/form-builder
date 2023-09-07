@@ -6,10 +6,11 @@ import RecoverPassword from './pages/auth/RecoverPassword';
 import SSOLogin from './pages/auth/SSOLogin';
 import ResetPassword from './pages/auth/ResetPassword';
 import RequireAuth from './components/auth/RequireAuth';
-import HomePage from './pages/HomePage';
+import CreateForm from './pages/CreateForm';
 import BaseLayout from './layouts/BaseLayout';
 import PersistLogin from './components/auth/PersistLogin';
 import Error from './pages/Error';
+import Settings from './pages/Settings';
 
 const router = createBrowserRouter([
   {
@@ -50,7 +51,11 @@ const router = createBrowserRouter([
             children: [
               {
                 path: '/',
-                element: <HomePage />,
+                element: <CreateForm />,
+              },
+              {
+                path: '/settings',
+                element: <Settings />,
               },
             ],
           },

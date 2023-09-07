@@ -53,6 +53,12 @@ export const signUp = catchAsyncError(
 
     const newUser = await User.create({ name, email, password });
 
+    sendEmail({
+      email: newUser.email,
+      subject: 'Welcome to Form Builder',
+      message: 'Thank you for signing up with Form Builder!',
+    });
+
     const newRefreshToken = signRefreshToken(newUser._id.toString());
     newUser.refreshToken = [newRefreshToken];
     await newUser.save();

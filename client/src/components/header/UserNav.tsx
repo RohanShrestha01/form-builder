@@ -8,6 +8,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuItem,
   DropdownMenuSeparator,
+  DropdownMenuArrow,
 } from '../ui/DropdownMenu';
 import { Link } from 'react-router-dom';
 import LogoutAlertDialog from '../shared/LogoutAlertDialog';
@@ -35,10 +36,10 @@ export default function UserNav() {
 
   return (
     <DropdownMenu modal={false} open={open} onOpenChange={setOpen}>
-      <DropdownMenuTrigger className="outline-none">
+      <DropdownMenuTrigger className="rounded-full border border-background outline-none transition-[border] duration-200 hover:border-border data-[state=open]:border-border">
         <UserAvatar className="cursor-pointer" />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent sideOffset={2} align="end">
         <DropdownMenuLabel className="flex items-center gap-2">
           <UserAvatar />
           <div className="space-y-1 px-2 py-1.5">
@@ -64,6 +65,8 @@ export default function UserNav() {
             <span>Log out</span>
           </DropdownMenuItem>
         </LogoutAlertDialog>
+
+        <DropdownMenuArrow />
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -8,6 +8,8 @@ const DropdownMenu = DropdownMenuPrimitive.Root;
 
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
 
+const DropdownMenuArrow = DropdownMenuPrimitive.Arrow;
+
 const DropdownMenuGroup = DropdownMenuPrimitive.Group;
 
 const DropdownMenuPortal = DropdownMenuPrimitive.Portal;
@@ -182,6 +184,7 @@ DropdownMenuShortcut.displayName = 'DropdownMenuShortcut';
 export {
   DropdownMenu,
   DropdownMenuTrigger,
+  DropdownMenuArrow,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuCheckboxItem,

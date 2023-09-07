@@ -12,7 +12,7 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
 const InputField = React.forwardRef<HTMLInputElement, Props>(
   ({ className, label, errorMessage, showRequired, ...props }, ref) => {
     return (
-      <div className="flex flex-col-reverse gap-2">
+      <div className="flex flex-col-reverse justify-end gap-2">
         {errorMessage ? (
           <span className="text-xs text-destructive">{errorMessage}</span>
         ) : null}
