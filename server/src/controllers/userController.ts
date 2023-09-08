@@ -114,3 +114,18 @@ export const deleteAccount = catchAsyncError(
     res.sendStatus(204);
   },
 );
+
+export const getProfile = catchAsyncError(
+  async (req: Request, res: Response) => {
+    const foundUser = await User.findById(req.userId)
+      .select('-refreshToken -__v')
+      .exec();
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        user: foundUser,
+      },
+    });
+  },
+);
