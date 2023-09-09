@@ -39,11 +39,7 @@ export default function ProfileDetails() {
 
   const { mutate, isLoading, variables } = useMutation({
     mutationFn: (data: ProfileDetailsFormType & { avatar?: File | null }) =>
-      axiosPrivate.patch('/user/profile', data, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }),
+      axiosPrivate.patch('/user/profile', data),
   });
 
   const onSubmit: SubmitHandler<ProfileDetailsFormType> = data => {

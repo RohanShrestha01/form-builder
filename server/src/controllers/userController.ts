@@ -88,7 +88,7 @@ export const updateProfile = catchAsyncError(
           ? `${req.protocol}://${req.get('host')}/img/users/${
               req.file.filename
             }`
-          : null,
+          : req.body.avatar,
       },
       { new: true },
     );
