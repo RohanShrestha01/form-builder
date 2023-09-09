@@ -31,7 +31,7 @@ export default function Settings() {
   });
 
   return (
-    <div className="mt-3">
+    <div className="mt-1">
       <section className="flex items-center justify-between">
         <div className="space-y-0.5">
           <h1 className="text-2xl font-bold tracking-tight">

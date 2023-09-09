@@ -13,6 +13,7 @@ import {
 import { Link } from 'react-router-dom';
 import LogoutAlertDialog from '../shared/LogoutAlertDialog';
 import { useState } from 'react';
+import { UserCircleSvg } from '../../assets/icons/Svgs';
 
 const UserAvatar = ({ className }: { className?: string }) => {
   const { auth } = useAuth();
@@ -20,11 +21,8 @@ const UserAvatar = ({ className }: { className?: string }) => {
   return (
     <Avatar className={className}>
       <AvatarImage src={auth.avatar} />
-      <AvatarFallback>
-        {auth.name
-          ?.match(/\b(\w)/g)
-          ?.join('')
-          .toUpperCase()}
+      <AvatarFallback className="bg-white">
+        <UserCircleSvg className="text-muted-foreground" />
       </AvatarFallback>
     </Avatar>
   );
@@ -36,7 +34,7 @@ export default function UserNav() {
 
   return (
     <DropdownMenu modal={false} open={open} onOpenChange={setOpen}>
-      <DropdownMenuTrigger className="rounded-full border border-background outline-none transition-[border] duration-200 hover:border-border data-[state=open]:border-border">
+      <DropdownMenuTrigger className="rounded-full outline-none ring-ring transition-shadow duration-200 hover:ring data-[state=open]:ring">
         <UserAvatar className="cursor-pointer" />
       </DropdownMenuTrigger>
       <DropdownMenuContent sideOffset={2} align="end">
