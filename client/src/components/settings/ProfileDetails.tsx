@@ -29,6 +29,7 @@ export default function ProfileDetails() {
     handleSubmit,
     formState: { errors, isDirty },
     setError,
+    reset,
   } = useForm<ProfileDetailsFormType>({
     resolver: zodResolver(userProfileSchema),
     values: {
@@ -155,7 +156,18 @@ export default function ProfileDetails() {
           {...register('email')}
         />
       </article>
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-4">
+        {isDirty && (
+          <Button
+            type="button"
+            variant="outline"
+            disabled={isLoading}
+            onClick={() => reset()}
+            className="border-destructive text-destructive hover:bg-destructive/5 hover:text-destructive"
+          >
+            Discard
+          </Button>
+        )}
         <Button
           disabled={!isDirty || isLoading}
           isLoading={isLoading && variables?.email !== undefined}
