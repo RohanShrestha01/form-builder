@@ -18,14 +18,20 @@ import { UserCircleSvg } from '../../assets/icons/Svgs';
 const UserAvatar = ({ className }: { className?: string }) => {
   const { auth } = useAuth();
 
-  return (
-    <Avatar className={className}>
-      <AvatarImage src={auth.avatar} />
-      <AvatarFallback className="bg-white">
-        <UserCircleSvg className="text-muted-foreground" />
-      </AvatarFallback>
-    </Avatar>
-  );
+  if (auth.avatar)
+    return (
+      <Avatar className={className}>
+        <AvatarImage src={auth.avatar} />
+        <AvatarFallback>
+          {auth.name
+            ?.match(/\b(\w)/g)
+            ?.join('')
+            .toUpperCase()}
+        </AvatarFallback>
+      </Avatar>
+    );
+
+  return <UserCircleSvg className="h-10 w-10 text-muted-foreground" />;
 };
 
 export default function UserNav() {

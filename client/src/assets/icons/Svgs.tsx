@@ -108,3 +108,27 @@ export const UserCircleSvg = ({ className }: Props) => (
     />
   </svg>
 );
+
+export const CloudUploadSvg = ({ className }: Props) => (
+  <svg viewBox="0 0 24 24" className={className}>
+    <g
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+    >
+      <path d="M7 18a4.6 4.4 0 0 1 0-9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1" />
+      <path d="m9 15l3-3l3 3m-3-3v9" />
+    </g>
+  </svg>
+);
+
+export const UploadSvg = ({ className }: Props) => (
+  <svg viewBox="0 0 24 24" className={className}>
+    <path
+      fill="currentColor"
+      d="M12 16q-.425 0-.713-.288T11 15V7.85L9.125 9.725q-.3.3-.7.3T7.7 9.7q-.3-.3-.287-.712T7.7 8.3l3.6-3.6q.15-.15.325-.212T12 4.425q.2 0 .375.063t.325.212l3.6 3.6q.3.3.288.713T16.3 9.7q-.3.3-.713.313t-.712-.288L13 7.85V15q0 .425-.288.713T12 16Zm-6 4q-.825 0-1.413-.588T4 18v-2q0-.425.288-.713T5 15q.425 0 .713.288T6 16v2h12v-2q0-.425.288-.713T19 15q.425 0 .713.288T20 16v2q0 .825-.588 1.413T18 20H6Z"
+    />
+  </svg>
+);
