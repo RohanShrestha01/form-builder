@@ -84,8 +84,11 @@ export const updateProfile = catchAsyncError(
       {
         name,
         email,
-        avatar: `${req.protocol}://${req.get('host')}/img/users/${req.file
-          ?.filename}`,
+        avatar: req.file
+          ? `${req.protocol}://${req.get('host')}/img/users/${
+              req.file.filename
+            }`
+          : null,
       },
       { new: true },
     );
