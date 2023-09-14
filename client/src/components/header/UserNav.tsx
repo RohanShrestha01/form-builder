@@ -40,7 +40,7 @@ export default function UserNav() {
 
   return (
     <DropdownMenu modal={false} open={open} onOpenChange={setOpen}>
-      <DropdownMenuTrigger className="rounded-full outline-none ring-ring transition-shadow duration-200 hover:ring data-[state=open]:ring">
+      <DropdownMenuTrigger className="rounded-full outline-none ring-slate-300 transition-shadow duration-200 hover:ring data-[state=open]:ring data-[state=open]:ring-ring">
         <UserAvatar className="cursor-pointer" />
       </DropdownMenuTrigger>
       <DropdownMenuContent sideOffset={2} align="end">

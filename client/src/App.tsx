@@ -11,6 +11,7 @@ import BaseLayout from './layouts/BaseLayout';
 import PersistLogin from './components/auth/PersistLogin';
 import Error from './pages/Error';
 import Settings from './pages/Settings';
+import MyForms from './pages/MyForms';
 
 const router = createBrowserRouter([
   {
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
               {
                 path: '/',
                 element: <CreateForm />,
+              },
+              {
+                path: '/my-forms',
+                element: <MyForms />,
               },
               {
                 path: '/settings',

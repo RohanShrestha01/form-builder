@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import useRefreshToken from './useRefreshToken';
 import { initialAuthState, useAuth } from '../contexts/AuthContext';
 import { axiosPrivate } from '../lib/axios';
-import { toast } from 'react-hot-toast';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function useAxiosPrivate() {
@@ -43,7 +42,6 @@ export default function useAxiosPrivate() {
               ? '/login'
               : `/login?callbackUrl=${encodeURIComponent(pathname)}`;
 
-          toast.error('Session expired!', { id: 'session-expired' });
           setAuth(initialAuthState);
           navigate(href, { replace: true });
         }
