@@ -16,6 +16,18 @@ import { getEncryptedData } from '../../utils';
 import { Avatar, AvatarImage, AvatarFallback } from '../ui/Avatar';
 import { UserCircleSvg } from '../../assets/icons/Svgs';
 import AvatarEditorDialog from './AvatarEditorDialog';
+import { ImageMinusIcon, ImagePlusIcon } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogCancel,
+  AlertDialogDescription,
+  AlertDialogFooter,
+} from '../ui/AlertDialog';
+import { useState } from 'react';
 
 type ProfileDetailsFormType = z.infer<typeof userProfileSchema>;
 
@@ -23,6 +35,8 @@ export default function ProfileDetails() {
   const axiosPrivate = useAxiosPrivate();
   const { auth, setAuth } = useAuth();
   const setCookie = useCookies(['userDetails'])[1];
+
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const {
     register,
@@ -94,47 +108,75 @@ export default function ProfileDetails() {
           <AvatarEditorDialog>
             <Button
               type="button"
-              className="cursor-pointer"
+              className="cursor-pointer gap-2"
               disabled={isLoading}
             >
-              Upload New
+              <ImagePlusIcon className="h-5 w-5" />
+              <span>Upload New</span>
             </Button>
           </AvatarEditorDialog>
-          <Button
-            type="button"
-            variant="outline"
-            disabled={isLoading}
-            isLoading={isLoading && variables?.avatar === null}
-            onClick={() => {
-              mutate(
-                {
-                  avatar: null,
-                },
-                {
-                  onSuccess: res => {
-                    setAuth(prev => ({
-                      ...prev,
-                      ...res.data.data.user,
-                    }));
-
-                    setCookie(
-                      'userDetails',
-                      getEncryptedData(res.data.data.user),
+          <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <AlertDialogTrigger asChild>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={isLoading}
+                className="gap-2"
+              >
+                <ImageMinusIcon className="h-5 w-5" />
+                <span>Delete Avatar</span>
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Delete Avatar?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Are you sure you want to delete your profile picture? This
+                  action is irreversible and will permanently remove your
+                  current profile picture.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter className="sm:space-x-4">
+                <Button
+                  variant="destructive"
+                  isLoading={isLoading}
+                  onClick={() => {
+                    mutate(
                       {
-                        path: '/',
-                        maxAge: cookieMaxAge,
+                        avatar: null,
+                      },
+                      {
+                        onSuccess: res => {
+                          setAuth(prev => ({
+                            ...prev,
+                            ...res.data.data.user,
+                          }));
+
+                          setCookie(
+                            'userDetails',
+                            getEncryptedData(res.data.data.user),
+                            {
+                              path: '/',
+                              maxAge: cookieMaxAge,
+                            },
+                          );
+
+                          toast.success('Avatar deleted successfully');
+                        },
+                        onError: () => toast.error('Failed to delete avatar'),
+                        onSettled: () => setDialogOpen(false),
                       },
                     );
-
-                    toast.success('Avatar updated successfully');
-                  },
-                  onError: () => toast.error('Failed to update avatar'),
-                },
-              );
-            }}
-          >
-            Delete Avatar
-          </Button>
+                  }}
+                >
+                  Yes, delete avatar
+                </Button>
+                <AlertDialogCancel disabled={isLoading}>
+                  Cancel
+                </AlertDialogCancel>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </article>
       <article className="grid grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] gap-6">

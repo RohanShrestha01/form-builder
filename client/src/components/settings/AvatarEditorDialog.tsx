@@ -24,9 +24,10 @@ import { useAuth } from '../../contexts/AuthContext';
 
 interface Props {
   children: React.ReactNode;
+  closeHandler?: () => void;
 }
 
-export default function AvatarEditorDialog({ children }: Props) {
+export default function AvatarEditorDialog({ children, closeHandler }: Props) {
   const [image, setImage] = useState<File | null>(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -77,7 +78,10 @@ export default function AvatarEditorDialog({ children }: Props) {
     <Dialog
       open={open}
       onOpenChange={open => {
-        if (open === false) reset();
+        if (!open) {
+          reset();
+          if (closeHandler) closeHandler();
+        }
         setOpen(open);
       }}
     >

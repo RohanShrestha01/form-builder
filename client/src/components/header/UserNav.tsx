@@ -1,4 +1,4 @@
-import { LogOutIcon, SettingsIcon } from 'lucide-react';
+import { ImagePlusIcon, LogOutIcon, SettingsIcon } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { AvatarImage, Avatar, AvatarFallback } from '../ui/Avatar';
 import {
@@ -14,6 +14,7 @@ import { Link } from 'react-router-dom';
 import LogoutAlertDialog from '../shared/LogoutAlertDialog';
 import { useState } from 'react';
 import { UserCircleSvg } from '../../assets/icons/Svgs';
+import AvatarEditorDialog from '../settings/AvatarEditorDialog';
 
 const UserAvatar = ({ className }: { className?: string }) => {
   const { auth } = useAuth();
@@ -54,6 +55,15 @@ export default function UserNav() {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <AvatarEditorDialog closeHandler={() => setOpen(false)}>
+          <DropdownMenuItem
+            className="gap-2 font-medium"
+            onSelect={e => e.preventDefault()}
+          >
+            <ImagePlusIcon className="h-5 w-5" />
+            <span>Upload picture</span>
+          </DropdownMenuItem>
+        </AvatarEditorDialog>
         <Link to="/settings">
           <DropdownMenuItem className="gap-2 font-medium">
             <SettingsIcon className="h-5 w-5" />
