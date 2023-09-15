@@ -20,7 +20,6 @@
     "@radix-ui/react-hover-card": "^1.0.6",
     "@radix-ui/react-slot": "^1.0.2",
     "@tanstack/react-query": "^4.32.6",
-    "@types/crypto-js": "^4.1.1",
     "axios": "^1.4.0",
     "crypto-js": "^4.1.1",
     "lucide-react": "^0.266.0",
@@ -31,13 +30,13 @@
     "react-easy-crop": "^5.0.2",
     "react-hook-form": "^7.45.4",
     "react-hot-toast": "^2.4.1",
-    "react-image-crop": "^10.1.8",
     "react-router-dom": "^6.15.0",
     "zod": "^3.21.4"
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^4.32.5",
     "@tanstack/react-query-devtools": "^4.32.6",
+    "@types/crypto-js": "^4.1.1",
     "@types/node": "^20.4.8",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",

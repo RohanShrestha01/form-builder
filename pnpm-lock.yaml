@@ -44,9 +44,6 @@ importers:
       '@tanstack/react-query':
         specifier: ^4.32.6
         version: 4.32.6(react-dom@18.2.0)(react@18.2.0)
-      '@types/crypto-js':
-        specifier: ^4.1.1
-        version: 4.1.1
       axios:
         specifier: ^1.4.0
         version: 1.4.0
@@ -77,9 +74,6 @@ importers:
       react-hot-toast:
         specifier: ^2.4.1
         version: 2.4.1(csstype@3.1.2)(react-dom@18.2.0)(react@18.2.0)
-      react-image-crop:
-        specifier: ^10.1.8
-        version: 10.1.8(react@18.2.0)
       react-router-dom:
         specifier: ^6.15.0
         version: 6.15.0(react-dom@18.2.0)(react@18.2.0)
@@ -93,6 +87,9 @@ importers:
       '@tanstack/react-query-devtools':
         specifier: ^4.32.6
         version: 4.32.6(@tanstack/react-query@4.32.6)(react-dom@18.2.0)(react@18.2.0)
+      '@types/crypto-js':
+        specifier: ^4.1.1
+        version: 4.1.1
       '@types/node':
         specifier: ^20.4.8
         version: 20.4.8
@@ -1471,7 +1468,7 @@ packages:
 
   /@types/crypto-js@4.1.1:
     resolution: {integrity: sha512-BG7fQKZ689HIoc5h+6D2Dgq1fABRa0RbBWKBd9SP/MVRVXROflpm5fhwyATX5duFmbStzyzyycPB8qUYKDH3NA==}
-    dev: false
+    dev: true
 
   /@types/express-serve-static-core@4.17.35:
     resolution: {integrity: sha512-wALWQwrgiB2AWTT91CB62b6Yt0sNHpznUXeZEcnPU3DRdlDIz74x8Qg1UUYKSVFi+va5vKOLYRBI1bRKiLLKIg==}
@@ -4449,14 +4446,6 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     transitivePeerDependencies:
       - csstype
-    dev: false
-
-  /react-image-crop@10.1.8(react@18.2.0):
-    resolution: {integrity: sha512-4rb8XtXNx7ZaOZarKKnckgz4xLMvds/YrU6mpJfGhGAsy2Mg4mIw1x+DCCGngVGq2soTBVVOxx2s/C6mTX9+pA==}
-    peerDependencies:
-      react: '>=16.13.1'
-    dependencies:
-      react: 18.2.0
     dev: false
 
   /react-is@16.13.1:

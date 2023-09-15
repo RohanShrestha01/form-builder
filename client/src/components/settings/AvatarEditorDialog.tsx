@@ -174,9 +174,9 @@ export default function AvatarEditorDialog({ children, closeHandler }: Props) {
                       setOpen(false);
                       setIsLoading(false);
                       reset();
-                      toast.success('Avatar updated successfully');
+                      toast.success('Avatar uploaded successfully');
                     },
-                    onError: () => toast.error('Error updating avatar'),
+                    onError: () => toast.error('Error uploading avatar'),
                   },
                 );
               } catch (e) {
