@@ -13,6 +13,7 @@ import {
   TypeIcon,
 } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 import {
   ListSearchSvg,
@@ -120,6 +121,8 @@ export default function FormElements() {
   const [searchParams] = useSearchParams();
   const query = searchParams.get('query') ?? '';
 
+  const [parent] = useAutoAnimate();
+
   const filteredElementGroups = elementGroups.map(({ elements, title }, i) => {
     const filteredElements = elements.filter(({ text }) =>
       text.toLowerCase().includes(query.toLowerCase()),
@@ -127,9 +130,9 @@ export default function FormElements() {
 
     if (filteredElements.length > 0)
       return (
-        <article key={i} className="space-y-3">
+        <article key={i}>
           <h3 className="text-sm font-medium text-muted-foreground">{title}</h3>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="mt-3 grid grid-cols-2 gap-4" ref={parent}>
             {filteredElements.map(({ text, Icon }, i) => (
               <Button
                 variant="secondary"
@@ -158,7 +161,7 @@ export default function FormElements() {
           </div>
           <SearchInput placeholder="Search Elements" />
         </section>
-        <section className="space-y-6">
+        <section className="flex flex-col gap-6" ref={parent}>
           {filteredElementGroups.every(element => element === null) ? (
             <p className="text-center text-sm font-medium text-muted-foreground">
               No results found
