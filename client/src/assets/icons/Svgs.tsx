@@ -132,3 +132,81 @@ export const UploadSvg = ({ className }: Props) => (
     />
   </svg>
 );
+
+export const ListSvg = ({ className }: Props) => (
+  <svg viewBox="0 0 512 512" className={className}>
+    <path
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="48"
+      d="M160 144h288M160 256h288M160 368h288"
+    />
+    <circle
+      cx="80"
+      cy="144"
+      r="16"
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="32"
+    />
+    <circle
+      cx="80"
+      cy="256"
+      r="16"
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="32"
+    />
+    <circle
+      cx="80"
+      cy="368"
+      r="16"
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="32"
+    />
+  </svg>
+);
+
+export const ListSearchSvg = ({ className }: Props) => (
+  <svg viewBox="0 0 24 24" className={className}>
+    <path
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      d="M11 15a4 4 0 1 0 8 0a4 4 0 1 0-8 0m7.5 3.5L21 21M4 6h16M4 12h4m-4 6h4"
+    />
+  </svg>
+);
+
+export const NumberSvg = ({ className }: Props) => (
+  <svg viewBox="2.5 7.5 19 9" className={className}>
+    <path
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      d="m3 10l2-2v8m4-8h3a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h3m4-8h2.5A1.5 1.5 0 0 1 21 9.5v1a1.5 1.5 0 0 1-1.5 1.5H18h1.5a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5H17"
+    />
+  </svg>
+);
+
+export const TextEditStyleSvg = ({ className }: Props) => (
+  <svg viewBox="3 2 18 20" className={className}>
+    <path
+      fill="currentColor"
+      d="M20.063 8.445a3.218 3.218 0 0 1-.002 4.551l-7.123 7.112a2.251 2.251 0 0 1-.943.562l-4.293 1.29a1 1 0 0 1-1.24-1.264l1.362-4.228c.11-.34.3-.65.552-.903l7.133-7.121a3.22 3.22 0 0 1 4.554.002Zm-3.494 1.06l-7.133 7.12a.75.75 0 0 0-.184.301l-1.07 3.323l3.382-1.015a.749.749 0 0 0 .314-.188L19 11.936a1.718 1.718 0 1 0-2.431-2.432ZM8.15 2.37l.05.105l3.253 8.249l-1.157 1.155L9.556 10H5.443l-.995 2.52a.75.75 0 0 1-.876.454l-.098-.031a.75.75 0 0 1-.452-.876l.03-.098l3.754-9.495a.75.75 0 0 1 1.345-.104Zm-.648 2.422L6.036 8.5h2.928L7.503 4.792Z"
+    ></path>
+  </svg>
+);

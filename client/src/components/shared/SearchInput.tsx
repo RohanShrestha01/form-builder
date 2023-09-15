@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
+import { SearchIcon, XIcon } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 
-import { SearchIcon, XIcon } from 'lucide-react';
+import Input from '../ui/Input';
 
 interface Props {
   placeholder: string;
@@ -47,19 +48,19 @@ export default function SearchInput({
 
   return (
     <div className={`relative flex items-center ${classname}`}>
-      <input
+      <Input
         type="text"
         placeholder={placeholder}
         value={search}
         onChange={e => setSearch(e.target.value)}
         spellCheck="false"
-        className="peer h-9 w-full rounded-md border border-muted-foreground px-10 text-sm placeholder:text-muted-foreground hover:border-foreground focus:border-primary focus:outline-none disabled:pointer-events-none disabled:select-none"
+        className="peer px-10"
         disabled={disabled}
       />
-      <SearchIcon className="absolute left-2.5 h-5 w-5 text-muted-foreground peer-hover:text-foreground peer-focus:text-primary" />
+      <SearchIcon className="absolute left-2.5 h-5 w-5 text-muted-foreground peer-focus:text-primary" />
       {search ? (
         <button
-          className="absolute right-2.5 text-muted-foreground peer-hover:text-foreground peer-focus:text-primary"
+          className="absolute right-2.5 text-muted-foreground peer-focus:text-primary"
           onClick={() => setSearch('')}
         >
           <XIcon className="h-5 w-5" />
