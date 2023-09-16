@@ -23,7 +23,7 @@ import {
 } from '../../assets/icons/Svgs';
 import { ScrollArea } from '../ui/ScrollArea';
 import SearchInput from '../shared/SearchInput';
-import { Button } from '../ui/Button';
+import DraggableButton from './DraggableButton';
 
 const elementGroups = [
   {
@@ -132,18 +132,11 @@ export default function FormElements() {
       return (
         <article key={i}>
           <h3 className="text-sm font-medium text-muted-foreground">{title}</h3>
-          <div className="mt-3 grid grid-cols-2 gap-4" ref={parent}>
+          <ul className="mt-3 grid grid-cols-2 gap-4" ref={parent}>
             {filteredElements.map(({ text, Icon }, i) => (
-              <Button
-                variant="secondary"
-                key={i}
-                className="cursor-grab gap-3 transition-all duration-200 hover:shadow"
-              >
-                <Icon className="h-[18px] w-[18px]" />
-                <span>{text}</span>
-              </Button>
+              <DraggableButton text={text} Icon={Icon} key={i} />
             ))}
-          </div>
+          </ul>
         </article>
       );
     else return null;
@@ -152,7 +145,7 @@ export default function FormElements() {
   return (
     <ScrollArea className="h-[calc(100vh-104px)] pr-[26px]">
       <aside className="relative w-80">
-        <section className="sticky top-0 space-y-5 bg-white pb-5">
+        <section className="sticky top-0 z-10 space-y-5 bg-white pb-5">
           <div className="space-y-1">
             <h1 className="text-lg font-semibold">Form Elements</h1>
             <h2 className="text-sm text-muted-foreground">

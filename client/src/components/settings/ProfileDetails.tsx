@@ -28,6 +28,7 @@ import {
   AlertDialogFooter,
 } from '../ui/AlertDialog';
 import { useState } from 'react';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 type ProfileDetailsFormType = z.infer<typeof userProfileSchema>;
 
@@ -35,6 +36,8 @@ export default function ProfileDetails() {
   const axiosPrivate = useAxiosPrivate();
   const { auth, setAuth } = useAuth();
   const setCookie = useCookies(['userDetails'])[1];
+
+  const [parent] = useAutoAnimate();
 
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -198,7 +201,7 @@ export default function ProfileDetails() {
           {...register('email')}
         />
       </article>
-      <div className="flex justify-end gap-4">
+      <div className="flex justify-end gap-4" ref={parent}>
         {isDirty && (
           <Button
             type="button"
