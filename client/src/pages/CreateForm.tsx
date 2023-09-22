@@ -1,6 +1,8 @@
-import { DndContext, DragOverlay } from '@dnd-kit/core';
-import { restrictToWindowEdges, snapCenterToCursor } from '@dnd-kit/modifiers';
+import { DndContext, DragOverlay, useSensor, useSensors } from '@dnd-kit/core';
+import { restrictToWindowEdges } from '@dnd-kit/modifiers';
+import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 
+import { KeyboardSensor, PointerSensor } from '../lib/dndKitSensors';
 import FormElements from '../components/create-form/FormElements';
 import {
   FormElementButton,
@@ -16,8 +18,16 @@ export default function CreateForm() {
   const [activeButton, setActiveButton] =
     useState<FormElementButtonProps | null>(null);
 
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
+
   return (
     <DndContext
+      sensors={sensors}
       onDragStart={e => setActiveButton(e.active.data.current?.element)}
       onDragCancel={() => setActiveButton(null)}
       onDragEnd={() => setActiveButton(null)}
@@ -49,10 +59,7 @@ export default function CreateForm() {
         </form>
       </div>
       <DragOverlay
-        modifiers={[
-          restrictToWindowEdges,
-          snapCenterToCursor,
-        ]} /* dropAnimation={null} */
+        modifiers={[restrictToWindowEdges]} /* dropAnimation={null} */
       >
         {activeButton ? (
           <FormElementButton className="cursor-grabbing" {...activeButton} />

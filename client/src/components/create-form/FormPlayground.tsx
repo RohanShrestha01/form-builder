@@ -1,11 +1,13 @@
-import { DndContext, useDroppable } from '@dnd-kit/core';
+import { DndContext, useDroppable, useSensor, useSensors } from '@dnd-kit/core';
 import {
   SortableContext,
+  sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { restrictToParentElement } from '@dnd-kit/modifiers';
 
 import FormElementCard from './FormElementCard';
+import { KeyboardSensor, PointerSensor } from '../../lib/dndKitSensors';
 
 const formElements = [
   {
@@ -29,8 +31,15 @@ export default function FormPlayground() {
     id: 'droppable',
   });
 
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
+
   return (
-    <DndContext modifiers={[restrictToParentElement]}>
+    <DndContext sensors={sensors} modifiers={[restrictToParentElement]}>
       <SortableContext
         items={formElements}
         strategy={verticalListSortingStrategy}

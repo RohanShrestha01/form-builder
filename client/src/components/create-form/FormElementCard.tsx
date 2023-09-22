@@ -29,7 +29,7 @@ export default function FormElementCard({ formElement }: Props) {
 
   return (
     <article
-      className={`relative flex gap-2 rounded-md bg-white py-3 pl-2 pr-4 shadow ${
+      className={`relative flex cursor-pointer gap-2 rounded-md bg-white py-3 pl-2 pr-4 shadow ${
         isDragging ? 'z-10' : ''
       }`}
       ref={setNodeRef}
@@ -49,6 +49,7 @@ export default function FormElementCard({ formElement }: Props) {
           <h1 className="font-medium">What is your name?</h1>
           <Tooltip asChild title="Delete">
             <Button
+              type="button"
               variant="ghost"
               size="icon"
               className="rounded-full hover:bg-destructive/5"
