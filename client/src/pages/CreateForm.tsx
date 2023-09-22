@@ -13,10 +13,30 @@ import FormPlayground from '../components/create-form/FormPlayground';
 import Input from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
 import { EyeIcon } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '../components/ui/AlertDialog';
+
+export interface FormElementsType {
+  id: number;
+  label: string;
+  type: string;
+  required: boolean;
+}
 
 export default function CreateForm() {
   const [activeButton, setActiveButton] =
     useState<FormElementButtonProps | null>(null);
+
+  const [formElements, setFormElements] = useState<FormElementsType[]>([]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -30,7 +50,19 @@ export default function CreateForm() {
       sensors={sensors}
       onDragStart={e => setActiveButton(e.active.data.current?.element)}
       onDragCancel={() => setActiveButton(null)}
-      onDragEnd={() => setActiveButton(null)}
+      onDragEnd={({ over, active }) => {
+        setActiveButton(null);
+        if (!over) return;
+        setFormElements(formElements => [
+          ...formElements,
+          {
+            id: Math.random() * 1000,
+            label: active.data.current?.element.text as string,
+            type: active.id as string,
+            required: false,
+          },
+        ]);
+      }}
     >
       <div className="flex gap-12">
         <FormElements />
@@ -49,11 +81,40 @@ export default function CreateForm() {
               <span>Preview</span>
             </Button>
           </section>
-          <FormPlayground />
+          <FormPlayground
+            formElements={formElements}
+            setFormElements={setFormElements}
+          />
           <section className="mt-5 space-x-5 self-end">
-            <Button type="reset" variant="destructive">
-              Clear Form
-            </Button>
+            {formElements.length !== 0 ? (
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button type="button" variant="destructive">
+                    Clear Form
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Clear Form?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Are you sure you want to clear the form? This action is
+                      irreversible and will permanently remove all the progress
+                      in the current form.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter className="sm:space-x-4">
+                    <AlertDialogAction
+                      onClick={() => {
+                        setFormElements([]);
+                      }}
+                    >
+                      Yes, clear form
+                    </AlertDialogAction>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            ) : null}
             <Button>Save Form</Button>
           </section>
         </form>
