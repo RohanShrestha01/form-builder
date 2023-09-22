@@ -18,15 +18,20 @@ import FormElementCard from './FormElementCard';
 import { KeyboardSensor, PointerSensor } from '../../lib/dndKitSensors';
 import { FormElementsType } from '../../pages/CreateForm';
 import { ScrollArea } from '../ui/ScrollArea';
+import { useRef } from 'react';
 
 interface Props {
   formElements: FormElementsType[];
   setFormElements: React.Dispatch<React.SetStateAction<FormElementsType[]>>;
+  isDropped: boolean;
+  resetIsDropped: () => void;
 }
 
 export default function FormPlayground({
   formElements,
   setFormElements,
+  isDropped,
+  resetIsDropped,
 }: Props) {
   const { setNodeRef, isOver } = useDroppable({
     id: 'droppable',
@@ -38,6 +43,14 @@ export default function FormPlayground({
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
+
+  const cardsEndRef = useRef<HTMLDivElement>(null);
+  if (cardsEndRef.current && isDropped) {
+    cardsEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => {
+      resetIsDropped();
+    }, 500);
+  }
 
   return (
     <DndContext
@@ -52,7 +65,7 @@ export default function FormPlayground({
       >
         <section
           ref={setNodeRef}
-          className={`flex-grow rounded-lg border-2 border-dashed bg-muted/25 py-5 pl-5 ${
+          className={`flex-grow rounded-lg border-2 border-dashed bg-muted/25 ${
             isOver ? 'border-muted-foreground' : 'border-slate-300'
           }`}
         >
@@ -67,8 +80,8 @@ export default function FormPlayground({
                 : 'Drag a element from the right to this area'}
             </p>
           ) : (
-            <ScrollArea className="h-[calc(100vh-252px)]">
-              <ul className="space-y-5 pr-5">
+            <ScrollArea className="h-[calc(100vh-212px)]">
+              <ul className="space-y-5 py-5 pl-5 pr-5">
                 {formElements.map(element => (
                   <FormElementCard
                     key={element.id}
@@ -83,6 +96,7 @@ export default function FormPlayground({
                   />
                 ))}
               </ul>
+              <div ref={cardsEndRef} />
             </ScrollArea>
           )}
         </section>

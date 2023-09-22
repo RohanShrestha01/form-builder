@@ -37,6 +37,7 @@ export default function CreateForm() {
     useState<FormElementButtonProps | null>(null);
 
   const [formElements, setFormElements] = useState<FormElementsType[]>([]);
+  const [isDropped, setIsDropped] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -48,8 +49,14 @@ export default function CreateForm() {
   return (
     <DndContext
       sensors={sensors}
-      onDragStart={e => setActiveButton(e.active.data.current?.element)}
-      onDragCancel={() => setActiveButton(null)}
+      onDragStart={e => {
+        setActiveButton(e.active.data.current?.element);
+        setIsDropped(false);
+      }}
+      onDragCancel={() => {
+        setActiveButton(null);
+        setIsDropped(false);
+      }}
       onDragEnd={({ over, active }) => {
         setActiveButton(null);
         if (!over) return;
@@ -62,6 +69,7 @@ export default function CreateForm() {
             required: false,
           },
         ]);
+        setIsDropped(true);
       }}
     >
       <div className="flex gap-12">
@@ -84,6 +92,8 @@ export default function CreateForm() {
           <FormPlayground
             formElements={formElements}
             setFormElements={setFormElements}
+            isDropped={isDropped}
+            resetIsDropped={() => setIsDropped(false)}
           />
           <section className="mt-5 space-x-5 self-end">
             {formElements.length !== 0 ? (
