@@ -8,10 +8,14 @@ export interface FormElementButtonProps {
   Icon: LucideIcon | ((props: { className: string }) => JSX.Element);
 }
 
-export const FormElementButton = ({ text, Icon }: FormElementButtonProps) => (
+export const FormElementButton = ({
+  text,
+  Icon,
+  className = '',
+}: FormElementButtonProps & { className?: string }) => (
   <Button
     variant="secondary"
-    className="w-full cursor-grab gap-3 transition-all duration-200 hover:shadow"
+    className={`w-full gap-3 transition-all duration-200 hover:shadow ${className}`}
   >
     <Icon className="h-[18px] w-[18px]" />
     <span>{text}</span>
@@ -26,14 +30,12 @@ export default function DraggableButton(props: FormElementButtonProps) {
 
   return (
     <li
-      style={{
-        opacity: isDragging ? 0.5 : 1,
-      }}
+      className={isDragging ? 'opacity-50' : 'opacity-100'}
       ref={setNodeRef}
       {...listeners}
       {...attributes}
     >
-      <FormElementButton {...props} />
+      <FormElementButton className="cursor-grab" {...props} />
     </li>
   );
 }
