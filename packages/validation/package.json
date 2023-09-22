@@ -8,6 +8,6 @@
   "author": "shrestharohan039@gmail.com",
   "license": "ISC",
   "dependencies": {
-    "zod": "^3.21.4"
+    "zod": "^3.22.2"
   }
 }
