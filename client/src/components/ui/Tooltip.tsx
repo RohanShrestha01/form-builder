@@ -46,7 +46,7 @@ const Tooltip = ({
   showArrow = false,
   asChild = false,
 }: Props) => (
-  <TooltipProvider delayDuration={500}>
+  <TooltipProvider delayDuration={400}>
     <TooltipRoot>
       <TooltipTrigger asChild={asChild}>{children}</TooltipTrigger>
       <TooltipPortal>
