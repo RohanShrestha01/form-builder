@@ -12,6 +12,8 @@ import { type FormElementsType } from '../../pages/CreateForm';
 import { Switch } from '../ui/Switch';
 import { Label } from '../ui/Label';
 import { Separator } from '../ui/Separator';
+import { Textarea } from '../ui/Textarea';
+import Tiptap from '../shared/Tiptap';
 
 const animateLayoutChanges: AnimateLayoutChanges = args => {
   const { isSorting, wasDragging } = args;
@@ -25,7 +27,7 @@ interface Props {
 }
 
 export default function FormElementCard({ formElement, deleteHandler }: Props) {
-  const { id, label } = formElement;
+  const { id, label, type } = formElement;
   const {
     attributes,
     listeners,
@@ -64,18 +66,27 @@ export default function FormElementCard({ formElement, deleteHandler }: Props) {
           <Input
             className="h-7 rounded-none border-0 border-b px-0.5 text-base font-medium shadow-none"
             defaultValue={label}
-            placeholder="Question"
+            placeholder={
+              ['heading', 'description'].includes(type)
+                ? label
+                : 'Question or Text'
+            }
+            onFocus={e => e.target.select()}
           />
           <div className="flex items-center">
-            <div className="flex items-center gap-2">
-              <Switch id={'required-' + formElement.id} />
-              <Label
-                className="cursor-pointer font-normal"
-                htmlFor={'required-' + formElement.id}
-              >
-                Required
-              </Label>
-            </div>
+            {['heading', 'description', 'switch', 'checkbox'].includes(
+              type,
+            ) ? null : (
+              <div className="flex items-center gap-2">
+                <Switch id={'required-' + formElement.id} />
+                <Label
+                  className="cursor-pointer font-normal"
+                  htmlFor={'required-' + formElement.id}
+                >
+                  Required
+                </Label>
+              </div>
+            )}
             <Separator orientation="vertical" className="mx-4 h-7" />
             <Tooltip asChild title="Delete">
               <Button
@@ -92,7 +103,23 @@ export default function FormElementCard({ formElement, deleteHandler }: Props) {
             </Tooltip>
           </div>
         </div>
-        <Input placeholder="Enter your name" />
+        {type === 'single-line' ? (
+          <Input placeholder="Single line text" />
+        ) : type === 'number' ? (
+          <Input type="number" placeholder="Number" />
+        ) : type === 'multi-line' ? (
+          <Textarea placeholder="Multi line text..." />
+        ) : type === 'rich-text' ? (
+          <Tiptap />
+        ) : type === 'attachments' ? (
+          <Input type="file" className="pt-1.5 text-muted-foreground" />
+        ) : type === 'image' ? (
+          <Input
+            type="file"
+            accept="image/*"
+            className="pt-1.5 text-muted-foreground"
+          />
+        ) : null}
       </div>
     </article>
   );
