@@ -1,5 +1,6 @@
 import {
   CalendarDaysIcon,
+  CalendarRangeIcon,
   CheckSquareIcon,
   ChevronDownCircleIcon,
   ClockIcon,
@@ -95,6 +96,10 @@ const elementGroups = [
       {
         text: 'Date',
         Icon: CalendarDaysIcon,
+      },
+      {
+        text: 'Date Range',
+        Icon: CalendarRangeIcon,
       },
       {
         text: 'Time',
