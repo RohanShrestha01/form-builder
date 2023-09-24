@@ -13,7 +13,7 @@ import { Switch } from '../ui/Switch';
 import { Label } from '../ui/Label';
 import { Separator } from '../ui/Separator';
 import { Textarea } from '../ui/Textarea';
-import Tiptap from '../shared/Tiptap';
+import RichTextEditor from '../shared/RichTextEditor';
 
 const animateLayoutChanges: AnimateLayoutChanges = args => {
   const { isSorting, wasDragging } = args;
@@ -110,7 +110,7 @@ export default function FormElementCard({ formElement, deleteHandler }: Props) {
         ) : type === 'multi-line' ? (
           <Textarea placeholder="Multi line text..." />
         ) : type === 'rich-text' ? (
-          <Tiptap />
+          <RichTextEditor />
         ) : type === 'attachments' ? (
           <Input type="file" className="pt-1.5 text-muted-foreground" />
         ) : type === 'image' ? (

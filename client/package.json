@@ -58,6 +58,7 @@
     "zod": "^3.22.2"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.10",
     "@tanstack/eslint-plugin-query": "^4.34.1",
     "@tanstack/react-query-devtools": "^4.35.3",
     "@types/crypto-js": "^4.1.2",

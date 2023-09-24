@@ -5,6 +5,7 @@ import {
   useSensor,
   useSensors,
   MeasuringStrategy,
+  closestCenter,
 } from '@dnd-kit/core';
 import {
   SortableContext,
@@ -58,6 +59,7 @@ export default function FormPlayground({
       modifiers={[restrictToParentElement]}
       onDragEnd={handleDragEnd}
       measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
+      collisionDetection={closestCenter}
     >
       <SortableContext
         items={formElements}
