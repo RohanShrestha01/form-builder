@@ -148,7 +148,7 @@ export default function FormElements() {
   });
 
   return (
-    <ScrollArea className="h-[calc(100vh-104px)] pr-[26px]">
+    <ScrollArea className="h-[calc(100vh-104px)] shrink-0 pr-[26px]">
       <aside className="relative w-80">
         <section className="sticky top-0 z-10 space-y-5 bg-white pb-5">
           <div className="space-y-1">

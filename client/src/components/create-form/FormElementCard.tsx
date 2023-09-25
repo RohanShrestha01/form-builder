@@ -14,6 +14,7 @@ import { Label } from '../ui/Label';
 import { Separator } from '../ui/Separator';
 import { Textarea } from '../ui/Textarea';
 import RichTextEditor from '../shared/RichTextEditor';
+import BubbleMenuEditor from '../shared/BubbleMenuEditor';
 
 const animateLayoutChanges: AnimateLayoutChanges = args => {
   const { isSorting, wasDragging } = args;
@@ -63,15 +64,13 @@ export default function FormElementCard({ formElement, deleteHandler }: Props) {
       </div>
       <div className="flex-grow space-y-2 pb-2">
         <div className="flex items-center gap-8">
-          <Input
-            className="h-7 rounded-none border-0 border-b px-0.5 text-base font-medium shadow-none"
-            defaultValue={label}
+          <BubbleMenuEditor
             placeholder={
               ['heading', 'description'].includes(type)
                 ? label
                 : 'Question or Text'
             }
-            onFocus={e => e.target.select()}
+            content={`<p>${label}</p>`}
           />
           <div className="flex items-center">
             {['heading', 'description', 'switch', 'checkbox'].includes(

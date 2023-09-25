@@ -3,7 +3,6 @@ import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import Placeholder from '@tiptap/extension-placeholder';
 import Typography from '@tiptap/extension-typography';
-import Link from '@tiptap/extension-link';
 import {
   BoldIcon,
   Code2Icon,
@@ -41,7 +40,6 @@ const extensions = [
         class: 'leading-7',
       },
     },
-    hardBreak: false,
     code: {
       HTMLAttributes: {
         class: 'bg-muted rounded p-1 box-decoration-clone',
@@ -71,7 +69,6 @@ const extensions = [
   Underline,
   Placeholder.configure({ placeholder: 'Write something …' }),
   Typography,
-  Link,
 ];
 
 interface Props {
@@ -80,7 +77,7 @@ interface Props {
 }
 
 const EditorToolbar = ({ className = '', editor }: Props) => {
-  if (!editor) return null;
+  if (!editor) return <div className="h-[45px]" />;
 
   const selectValue = editor.isActive('paragraph')
     ? 'paragraph'
