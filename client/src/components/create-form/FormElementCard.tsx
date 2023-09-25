@@ -18,6 +18,7 @@ import BubbleMenuEditor from '../shared/BubbleMenuEditor';
 import { Checkbox } from '../ui/Checkbox';
 import { DatePicker } from '../shared/DatePicker';
 import { DateRangePicker } from '../shared/DateRangePicker';
+import Options from './Options';
 
 const animateLayoutChanges: AnimateLayoutChanges = args => {
   const { isSorting, wasDragging } = args;
@@ -120,6 +121,11 @@ export default function FormElementCard({ formElement, deleteHandler }: Props) {
           <Textarea placeholder="Multi line text..." />
         ) : type === 'rich-text' ? (
           <RichTextEditor />
+        ) : type === 'checklist' ||
+          type === 'multi-choice' ||
+          type === 'dropdown' ||
+          type === 'combobox' ? (
+          <Options type={type} />
         ) : type === 'date' ? (
           <DatePicker />
         ) : type === 'date-range' ? (
