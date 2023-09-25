@@ -12,6 +12,7 @@ import Placeholder from '@tiptap/extension-placeholder';
 import StarterKit from '@tiptap/starter-kit';
 import {
   BoldIcon,
+  Code2Icon,
   ItalicIcon,
   Redo2Icon,
   RemoveFormattingIcon,
@@ -78,6 +79,15 @@ const Menu = ({ editor }: { editor: Editor }) => (
       className="text-white hover:bg-white data-[state=on]:bg-white"
     >
       <StrikethroughIcon className="h-4 w-4" />
+    </Toggle>
+    <Toggle
+      size="sm"
+      pressed={editor.isActive('code')}
+      onPressedChange={() => editor.chain().focus().toggleCode().run()}
+      disabled={!editor.can().chain().focus().toggleCode().run()}
+      className="text-white hover:bg-white data-[state=on]:bg-white"
+    >
+      <Code2Icon className="h-4 w-4" />
     </Toggle>
     <Button
       variant="ghost"

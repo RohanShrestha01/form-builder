@@ -15,6 +15,7 @@ import { Separator } from '../ui/Separator';
 import { Textarea } from '../ui/Textarea';
 import RichTextEditor from '../shared/RichTextEditor';
 import BubbleMenuEditor from '../shared/BubbleMenuEditor';
+import { Checkbox } from '../ui/Checkbox';
 
 const animateLayoutChanges: AnimateLayoutChanges = args => {
   const { isSorting, wasDragging } = args;
@@ -64,14 +65,21 @@ export default function FormElementCard({ formElement, deleteHandler }: Props) {
       </div>
       <div className="flex-grow space-y-2 pb-2">
         <div className="flex items-center gap-8">
-          <BubbleMenuEditor
-            placeholder={
-              ['heading', 'description'].includes(type)
-                ? label
-                : 'Question or Text'
-            }
-            content={`<p>${label}</p>`}
-          />
+          <div className="flex w-full items-center gap-5">
+            {type === 'switch' ? (
+              <Switch />
+            ) : type === 'checkbox' ? (
+              <Checkbox />
+            ) : null}
+            <BubbleMenuEditor
+              placeholder={
+                ['heading', 'description'].includes(type)
+                  ? label
+                  : 'Question or Text'
+              }
+              content={`<p>${label}</p>`}
+            />
+          </div>
           <div className="flex items-center">
             {['heading', 'description', 'switch', 'checkbox'].includes(
               type,
