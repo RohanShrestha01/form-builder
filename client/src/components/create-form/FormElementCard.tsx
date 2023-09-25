@@ -16,6 +16,8 @@ import { Textarea } from '../ui/Textarea';
 import RichTextEditor from '../shared/RichTextEditor';
 import BubbleMenuEditor from '../shared/BubbleMenuEditor';
 import { Checkbox } from '../ui/Checkbox';
+import { DatePicker } from '../shared/DatePicker';
+import { DateRangePicker } from '../shared/DateRangePicker';
 
 const animateLayoutChanges: AnimateLayoutChanges = args => {
   const { isSorting, wasDragging } = args;
@@ -118,6 +120,12 @@ export default function FormElementCard({ formElement, deleteHandler }: Props) {
           <Textarea placeholder="Multi line text..." />
         ) : type === 'rich-text' ? (
           <RichTextEditor />
+        ) : type === 'date' ? (
+          <DatePicker />
+        ) : type === 'date-range' ? (
+          <DateRangePicker />
+        ) : type === 'time' ? (
+          <Input type="time" className="w-32" />
         ) : type === 'attachments' ? (
           <Input type="file" className="pt-1.5 text-muted-foreground" />
         ) : type === 'image' ? (
