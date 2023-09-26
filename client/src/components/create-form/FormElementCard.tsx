@@ -8,7 +8,6 @@ import {
 import Input from '../ui/Input';
 import { Button } from '../ui/Button';
 import Tooltip from '../ui/Tooltip';
-import { type FormElementsType } from '../../pages/CreateForm';
 import { Switch } from '../ui/Switch';
 import { Label } from '../ui/Label';
 import { Separator } from '../ui/Separator';
@@ -19,6 +18,10 @@ import { Checkbox } from '../ui/Checkbox';
 import { DatePicker } from '../shared/DatePicker';
 import { DateRangePicker } from '../shared/DateRangePicker';
 import Options from './Options';
+import {
+  type FormElementsType,
+  useFormPlaygroundStore,
+} from '../../stores/formPlaygroundStore';
 
 const animateLayoutChanges: AnimateLayoutChanges = args => {
   const { isSorting, wasDragging } = args;
@@ -28,11 +31,16 @@ const animateLayoutChanges: AnimateLayoutChanges = args => {
 
 interface Props {
   formElement: FormElementsType;
-  deleteHandler: (id: number) => void;
 }
 
-export default function FormElementCard({ formElement, deleteHandler }: Props) {
-  const { id, label, type } = formElement;
+export default function FormElementCard({ formElement }: Props) {
+  const { id, label, type, required } = formElement;
+  const removeFormElement = useFormPlaygroundStore(
+    state => state.removeFormElement,
+  );
+  const toggleRequired = useFormPlaygroundStore(state => state.toggleRequired);
+  const updateLabel = useFormPlaygroundStore(state => state.updateLabel);
+
   const {
     attributes,
     listeners,
@@ -80,7 +88,10 @@ export default function FormElementCard({ formElement, deleteHandler }: Props) {
                   ? label
                   : 'Question or Text'
               }
-              content={`<p>${label}</p>`}
+              content={label}
+              updateHandler={html => {
+                updateLabel(id, html);
+              }}
             />
           </div>
           <div className="flex items-center">
@@ -88,10 +99,14 @@ export default function FormElementCard({ formElement, deleteHandler }: Props) {
               type,
             ) ? null : (
               <div className="flex items-center gap-2">
-                <Switch id={'required-' + formElement.id} />
+                <Switch
+                  id={'required-' + id}
+                  checked={required}
+                  onCheckedChange={() => toggleRequired(id)}
+                />
                 <Label
                   className="cursor-pointer font-normal"
-                  htmlFor={'required-' + formElement.id}
+                  htmlFor={'required-' + id}
                 >
                   Required
                 </Label>
@@ -105,7 +120,7 @@ export default function FormElementCard({ formElement, deleteHandler }: Props) {
                 size="icon"
                 className="rounded-full hover:bg-destructive/5"
                 onClick={() => {
-                  deleteHandler(id);
+                  removeFormElement(id);
                 }}
               >
                 <Trash2Icon className="h-5 w-5 text-destructive" />
@@ -121,11 +136,10 @@ export default function FormElementCard({ formElement, deleteHandler }: Props) {
           <Textarea placeholder="Multi line text..." />
         ) : type === 'rich-text' ? (
           <RichTextEditor />
-        ) : type === 'checklist' ||
-          type === 'multi-choice' ||
-          type === 'dropdown' ||
-          type === 'combobox' ? (
-          <Options type={type} />
+        ) : ['checklist', 'multi-choice', 'dropdown', 'combobox'].includes(
+            type,
+          ) ? (
+          <Options type={type} id={id} />
         ) : type === 'date' ? (
           <DatePicker />
         ) : type === 'date-range' ? (

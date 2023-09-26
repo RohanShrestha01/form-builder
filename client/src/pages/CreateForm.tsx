@@ -24,20 +24,20 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '../components/ui/AlertDialog';
-
-export interface FormElementsType {
-  id: number;
-  label: string;
-  type: string;
-  required: boolean;
-}
+import { useFormPlaygroundStore } from '../stores/formPlaygroundStore';
 
 export default function CreateForm() {
   const [activeButton, setActiveButton] =
     useState<FormElementButtonProps | null>(null);
-
-  const [formElements, setFormElements] = useState<FormElementsType[]>([]);
   const [isDropped, setIsDropped] = useState(false);
+
+  const addFormElement = useFormPlaygroundStore(state => state.addFormElement);
+  const removeAllFormElements = useFormPlaygroundStore(
+    state => state.removeAllFormElements,
+  );
+  const formElementsLength = useFormPlaygroundStore(
+    state => state.formElements.length,
+  );
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -60,15 +60,10 @@ export default function CreateForm() {
       onDragEnd={({ over, active }) => {
         setActiveButton(null);
         if (!over) return;
-        setFormElements(formElements => [
-          ...formElements,
-          {
-            id: Math.random() * 1000,
-            label: active.data.current?.element.text as string,
-            type: active.id as string,
-            required: false,
-          },
-        ]);
+        addFormElement(
+          active.data.current?.element.text as string,
+          active.id as string,
+        );
         setIsDropped(true);
       }}
     >
@@ -90,13 +85,11 @@ export default function CreateForm() {
             </Button>
           </section>
           <FormPlayground
-            formElements={formElements}
-            setFormElements={setFormElements}
             isDropped={isDropped}
             resetIsDropped={() => setIsDropped(false)}
           />
           <section className="mt-5 space-x-5 self-end">
-            {formElements.length !== 0 ? (
+            {formElementsLength !== 0 ? (
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button type="button" variant="destructive">
@@ -113,11 +106,7 @@ export default function CreateForm() {
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter className="sm:space-x-4">
-                    <AlertDialogAction
-                      onClick={() => {
-                        setFormElements([]);
-                      }}
-                    >
+                    <AlertDialogAction onClick={removeAllFormElements}>
                       Yes, clear form
                     </AlertDialogAction>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -129,9 +118,7 @@ export default function CreateForm() {
           </section>
         </form>
       </div>
-      <DragOverlay
-        modifiers={[restrictToWindowEdges]} /* dropAnimation={null} */
-      >
+      <DragOverlay modifiers={[restrictToWindowEdges]}>
         {activeButton ? (
           <FormElementButton className="cursor-grabbing" {...activeButton} />
         ) : null}

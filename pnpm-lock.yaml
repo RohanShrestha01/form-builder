@@ -116,6 +116,9 @@ importers:
       date-fns:
         specifier: ^2.30.0
         version: 2.30.0
+      immer:
+        specifier: ^10.0.2
+        version: 10.0.2
       lucide-react:
         specifier: ^0.266.0
         version: 0.266.0(react@18.2.0)
@@ -146,9 +149,15 @@ importers:
       react-router-dom:
         specifier: ^6.16.0
         version: 6.16.0(react-dom@18.2.0)(react@18.2.0)
+      uuid:
+        specifier: ^9.0.1
+        version: 9.0.1
       zod:
         specifier: ^3.22.2
         version: 3.22.2
+      zustand:
+        specifier: ^4.4.1
+        version: 4.4.1(@types/react@18.2.22)(immer@10.0.2)(react@18.2.0)
     devDependencies:
       '@tailwindcss/typography':
         specifier: ^0.5.10
@@ -171,6 +180,9 @@ importers:
       '@types/react-dom':
         specifier: ^18.2.7
         version: 18.2.7
+      '@types/uuid':
+        specifier: ^9.0.4
+        version: 9.0.4
       '@typescript-eslint/eslint-plugin':
         specifier: ^6.7.2
         version: 6.7.2(@typescript-eslint/parser@6.7.2)(eslint@8.49.0)(typescript@5.2.2)
@@ -4318,6 +4330,10 @@ packages:
     engines: {node: '>= 4'}
     dev: true
 
+  /immer@10.0.2:
+    resolution: {integrity: sha512-Rx3CqeqQ19sxUtYV9CU911Vhy8/721wRFnJv3REVGWUmoAcIwzifTsdmJte/MV+0/XpM35LZdQMBGkRIoLPwQA==}
+    dev: false
+
   /import-fresh@3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
     engines: {node: '>=6'}
@@ -6944,4 +6960,25 @@ packages:
 
   /zod@3.22.2:
     resolution: {integrity: sha512-wvWkphh5WQsJbVk1tbx1l1Ly4yg+XecD+Mq280uBGt9wa5BKSWf4Mhp6GmrkPixhMxmabYY7RbzlwVP32pbGCg==}
+    dev: false
+
+  /zustand@4.4.1(@types/react@18.2.22)(immer@10.0.2)(react@18.2.0):
+    resolution: {integrity: sha512-QCPfstAS4EBiTQzlaGP1gmorkh/UL1Leaj2tdj+zZCZ/9bm0WS7sI2wnfD5lpOszFqWJ1DcPnGoY8RDL61uokw==}
+    engines: {node: '>=12.7.0'}
+    peerDependencies:
+      '@types/react': '>=16.8'
+      immer: '>=9.0'
+      react: '>=16.8'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      immer:
+        optional: true
+      react:
+        optional: true
+    dependencies:
+      '@types/react': 18.2.22
+      immer: 10.0.2
+      react: 18.2.0
+      use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false

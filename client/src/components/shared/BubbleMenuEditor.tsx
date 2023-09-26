@@ -103,9 +103,14 @@ const Menu = ({ editor }: { editor: Editor }) => (
 interface Props {
   placeholder?: string;
   content?: string;
+  updateHandler?: (html: string) => void;
 }
 
-export default function BubbleMenuEditor({ placeholder, content }: Props) {
+export default function BubbleMenuEditor({
+  placeholder,
+  content,
+  updateHandler,
+}: Props) {
   const [isFocused, setIsFocused] = useState(false);
 
   const editor = useEditor({
@@ -140,12 +145,16 @@ export default function BubbleMenuEditor({ placeholder, content }: Props) {
         class: 'outline-none min-h-7 prose prose-slate max-w-none',
       },
     },
-    onFocus: ({ editor }) => {
-      editor.commands.selectAll();
+    onFocus: ({ editor, event }) => {
+      if ('sourceCapabilities' in event && event.sourceCapabilities)
+        editor.commands.selectAll();
       setIsFocused(true);
     },
     onBlur: () => setIsFocused(false),
     content,
+    onUpdate: ({ editor }) => {
+      if (updateHandler) updateHandler(editor.getHTML());
+    },
   });
 
   if (!editor) return <div className="w-full" />;

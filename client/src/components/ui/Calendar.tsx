@@ -84,9 +84,9 @@ function Calendar({
               </SelectTrigger>
               <SelectContent position="popper">
                 <ScrollArea className="h-80">
-                  {options.map((option, id: number) => (
+                  {options.map((option, i) => (
                     <SelectItem
-                      key={`${option.props.value}-${id}`}
+                      key={`${option.props.value}-${i}`}
                       value={option.props.value?.toString() ?? ''}
                     >
                       {option.props.children}

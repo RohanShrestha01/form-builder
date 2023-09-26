@@ -9,7 +9,6 @@ import {
 } from '@dnd-kit/core';
 import {
   SortableContext,
-  arrayMove,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
@@ -17,23 +16,21 @@ import { restrictToParentElement } from '@dnd-kit/modifiers';
 
 import FormElementCard from './FormElementCard';
 import { KeyboardSensor, PointerSensor } from '../../lib/dndKitSensors';
-import { FormElementsType } from '../../pages/CreateForm';
 import { ScrollArea } from '../ui/ScrollArea';
 import { useRef } from 'react';
+import { useFormPlaygroundStore } from '../../stores/formPlaygroundStore';
 
 interface Props {
-  formElements: FormElementsType[];
-  setFormElements: React.Dispatch<React.SetStateAction<FormElementsType[]>>;
   isDropped: boolean;
   resetIsDropped: () => void;
 }
 
-export default function FormPlayground({
-  formElements,
-  setFormElements,
-  isDropped,
-  resetIsDropped,
-}: Props) {
+export default function FormPlayground({ isDropped, resetIsDropped }: Props) {
+  const formElements = useFormPlaygroundStore(state => state.formElements);
+  const moveFormElement = useFormPlaygroundStore(
+    state => state.moveFormElement,
+  );
+
   const { setNodeRef, isOver } = useDroppable({
     id: 'droppable',
   });
@@ -85,17 +82,7 @@ export default function FormPlayground({
             <ScrollArea className="h-[calc(100vh-212px)]">
               <ul className="space-y-5 py-5 pl-5 pr-5">
                 {formElements.map(element => (
-                  <FormElementCard
-                    key={element.id}
-                    formElement={element}
-                    deleteHandler={id => {
-                      setFormElements(formElements =>
-                        formElements.filter(
-                          formElement => formElement.id !== id,
-                        ),
-                      );
-                    }}
-                  />
+                  <FormElementCard key={element.id} formElement={element} />
                 ))}
               </ul>
               <div ref={cardsEndRef} />
@@ -110,12 +97,9 @@ export default function FormPlayground({
     if (!over) return;
 
     if (active.id !== over.id) {
-      setFormElements(formElements => {
-        const oldIndex = active.data.current?.sortable.index as number;
-        const newIndex = over.data.current?.sortable.index as number;
-
-        return arrayMove(formElements, oldIndex, newIndex);
-      });
+      const oldIndex = active.data.current?.sortable.index as number;
+      const newIndex = over.data.current?.sortable.index as number;
+      moveFormElement(oldIndex, newIndex);
     }
   }
 }

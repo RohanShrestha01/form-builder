@@ -1,17 +1,30 @@
 import { CircleIcon, PlusIcon, XIcon } from 'lucide-react';
+import { shallow } from 'zustand/shallow';
+
 import { Checkbox } from '../ui/Checkbox';
 import Input from '../ui/Input';
 import { Button } from '../ui/Button';
-import { useState } from 'react';
 import Tooltip from '../ui/Tooltip';
+import { useFormPlaygroundStore } from '../../stores/formPlaygroundStore';
 
-export default function Options({ type }: { type: string }) {
-  const [options, setOptions] = useState(['Option 1', 'Option 2']);
+interface Props {
+  type: string;
+  id: string;
+}
+
+export default function Options({ type, id }: Props) {
+  const options = useFormPlaygroundStore(
+    state => state.formElements.find(el => el.id === id)?.options ?? [],
+    shallow,
+  );
+  const addOption = useFormPlaygroundStore(state => state.addOption);
+  const deleteOption = useFormPlaygroundStore(state => state.deleteOption);
+  const updateOption = useFormPlaygroundStore(state => state.updateOption);
 
   return (
     <ul className="space-y-3">
-      {options.map((option, i) => (
-        <li className="flex items-center gap-4" key={option + '-' + i}>
+      {options.map(({ label, value }, i) => (
+        <li className="flex items-center gap-4" key={value}>
           <div>
             {type === 'checklist' ? (
               <Checkbox />
@@ -23,7 +36,8 @@ export default function Options({ type }: { type: string }) {
           </div>
           <Input
             className="h-8 rounded-none border-0 border-b px-0 shadow-none"
-            defaultValue={option}
+            value={label}
+            onChange={e => updateOption(id, value, e.target.value)}
             onFocus={e => e.target.select()}
           />
           {options.length > 1 ? (
@@ -33,9 +47,7 @@ export default function Options({ type }: { type: string }) {
                 size="icon"
                 variant="ghost"
                 className="h-8 w-8 rounded-full"
-                onClick={() =>
-                  setOptions(prev => prev.filter((_, j) => i !== j))
-                }
+                onClick={() => deleteOption(id, value)}
               >
                 <XIcon className="h-5 w-5" />
               </Button>
@@ -48,9 +60,7 @@ export default function Options({ type }: { type: string }) {
           type="button"
           variant="ghost"
           className="gap-2"
-          onClick={() =>
-            setOptions(prev => [...prev, 'Option ' + (options.length + 1)])
-          }
+          onClick={() => addOption(id)}
         >
           <PlusIcon className="h-5 w-5" />
           <span>Add option</span>
