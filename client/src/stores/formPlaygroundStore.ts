@@ -116,7 +116,7 @@ export const useFormPlaygroundStore = createWithEqualityFn(
             const formEl = draft.formElements.find(el => el.id === id);
             if (formEl?.options)
               formEl.options = formEl.options.filter(
-                option => option.value === optionId,
+                option => option.value !== optionId,
               );
           }),
         ),
