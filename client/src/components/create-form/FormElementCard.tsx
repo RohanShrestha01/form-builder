@@ -18,10 +18,8 @@ import { Checkbox } from '../ui/Checkbox';
 import { DatePicker } from '../shared/DatePicker';
 import { DateRangePicker } from '../shared/DateRangePicker';
 import Options from './Options';
-import {
-  type FormElementsType,
-  useFormPlaygroundStore,
-} from '../../stores/formPlaygroundStore';
+import { useFormPlaygroundStore } from '../../stores/formPlaygroundStore';
+import type { FormElementsType } from '@form-builder/validation/types';
 
 const animateLayoutChanges: AnimateLayoutChanges = args => {
   const { isSorting, wasDragging } = args;

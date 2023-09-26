@@ -7,6 +7,7 @@ import hpp from 'hpp';
 
 import authRouter from './routes/authRoutes';
 import userRouter from './routes/userRoutes';
+import formRouter from './routes/formRoutes';
 import AppError from './utils/appError';
 import { globalErrorHandler } from './controllers/errorController';
 import verifyJWT from './middleware/verifyJWT';
@@ -40,6 +41,7 @@ app.use(hpp());
 app.use('/api/v1/auth', authRouter);
 app.use(verifyJWT);
 app.use('/api/v1/user', userRouter);
+app.use('/api/v1/forms', formRouter);
 
 app.all('*', (req, _res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

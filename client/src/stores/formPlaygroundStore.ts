@@ -4,14 +4,7 @@ import { immer } from 'zustand/middleware/immer';
 import { produce } from 'immer';
 import { v4 as uuid } from 'uuid';
 import { arrayMove } from '@dnd-kit/sortable';
-
-export interface FormElementsType {
-  id: string;
-  label: string;
-  type: string;
-  required: boolean;
-  options?: { label: string; value: string }[];
-}
+import type { FormElementsType } from '@form-builder/validation/types';
 
 interface FormPlaygroundStoreType {
   formElements: FormElementsType[];
