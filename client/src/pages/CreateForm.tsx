@@ -1,3 +1,4 @@
+import { useLocation } from 'react-router-dom';
 import { DndContext, DragOverlay, useSensor, useSensors } from '@dnd-kit/core';
 import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
@@ -12,7 +13,7 @@ import { useState } from 'react';
 import FormPlayground from '../components/create-form/FormPlayground';
 import Input from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
-import { EyeIcon } from 'lucide-react';
+import { EyeIcon, LockIcon } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,8 +26,16 @@ import {
   AlertDialogTrigger,
 } from '../components/ui/AlertDialog';
 import { useFormPlaygroundStore } from '../stores/formPlaygroundStore';
+import { useMutation } from '@tanstack/react-query';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
+import toast from 'react-hot-toast';
+import DemoInfoCard from '../components/create-form/DemoInfoCard';
 
 export default function CreateForm() {
+  const { pathname } = useLocation();
+  const isDemo = pathname === '/demo';
+
+  const [formName, setFormName] = useState('');
   const [activeButton, setActiveButton] =
     useState<FormElementButtonProps | null>(null);
   const [isDropped, setIsDropped] = useState(false);
@@ -35,9 +44,7 @@ export default function CreateForm() {
   const removeAllFormElements = useFormPlaygroundStore(
     state => state.removeAllFormElements,
   );
-  const formElementsLength = useFormPlaygroundStore(
-    state => state.formElements.length,
-  );
+  const formElements = useFormPlaygroundStore(state => state.formElements);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -45,6 +52,21 @@ export default function CreateForm() {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
+
+  const axiosPrivate = useAxiosPrivate();
+  const { mutate, isLoading } = useMutation({
+    mutationFn: () =>
+      axiosPrivate.post('/forms', {
+        name: formName,
+        elements: formElements,
+      }),
+    onSuccess: () => {
+      setFormName('');
+      removeAllFormElements();
+      toast.success('Form created successfully');
+    },
+    onError: () => toast.error('Error creating form'),
+  });
 
   return (
     <DndContext
@@ -69,11 +91,22 @@ export default function CreateForm() {
     >
       <div className="flex gap-12">
         <FormElements />
-        <form className="flex flex-grow flex-col">
+        <form
+          className="flex flex-grow flex-col"
+          onSubmit={e => {
+            e.preventDefault();
+            mutate();
+          }}
+        >
           <section className="mb-3 flex items-center justify-between">
             <div className="flex items-center gap-3 whitespace-nowrap">
               <label className="font-medium">Form Name:</label>
-              <Input required placeholder="Enter form name" />
+              <Input
+                required
+                placeholder="Enter form name"
+                value={formName}
+                onChange={e => setFormName(e.target.value)}
+              />
             </div>
             <Button
               type="button"
@@ -88,8 +121,9 @@ export default function CreateForm() {
             isDropped={isDropped}
             resetIsDropped={() => setIsDropped(false)}
           />
-          <section className="mt-5 space-x-5 self-end">
-            {formElementsLength !== 0 ? (
+          <section className="mt-5 flex items-center gap-5 self-end">
+            {isDemo && <DemoInfoCard />}
+            {formElements.length !== 0 ? (
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button type="button" variant="destructive">
@@ -114,7 +148,14 @@ export default function CreateForm() {
                 </AlertDialogContent>
               </AlertDialog>
             ) : null}
-            <Button>Save Form</Button>
+            <Button
+              disabled={isDemo}
+              isLoading={isLoading}
+              className={isDemo ? 'gap-2.5' : ''}
+            >
+              {isDemo && <LockIcon className="h-[18px] w-[18px]" />}
+              <span>Save Form</span>
+            </Button>
           </section>
         </form>
       </div>

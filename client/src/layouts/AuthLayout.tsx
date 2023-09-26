@@ -28,11 +28,21 @@ export default function AuthLayout() {
           </div>
         </div>
       </header>
-      <main className="mx-auto mt-16 flex w-full max-w-[1440px] flex-grow px-6 py-5">
-        <section className="flex-grow"></section>
-        <section className="w-[424px] self-center">
+      <main
+        className={`mx-auto mt-16 w-full max-w-[1440px] flex-grow px-6 py-5 ${
+          pathname === '/demo' ? '' : 'flex'
+        }`}
+      >
+        {pathname === '/demo' ? (
           <Outlet />
-        </section>
+        ) : (
+          <>
+            <section className="flex-grow"></section>
+            <section className="w-[424px] self-center">
+              <Outlet />
+            </section>
+          </>
+        )}
       </main>
     </div>
   );
