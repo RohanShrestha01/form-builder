@@ -16,6 +16,20 @@ export const getAllForms = catchAsyncError(
   },
 );
 
+export const getForm = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const form = await Form.findById(req.params.id);
+    if (!form) return next(new AppError('No form found with that ID', 404));
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        form,
+      },
+    });
+  },
+);
+
 export const createForm = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const { name, elements } = req.body;
@@ -35,5 +49,30 @@ export const createForm = catchAsyncError(
         form: newForm,
       },
     });
+  },
+);
+
+export const updateForm = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const form = await Form.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    if (!form) return next(new AppError('No form found with that ID', 404));
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        form,
+      },
+    });
+  },
+);
+
+export const deleteForm = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const form = await Form.findByIdAndDelete(req.params.id);
+    if (!form) return next(new AppError('No form found with that ID', 404));
+
+    res.sendStatus(204);
   },
 );
