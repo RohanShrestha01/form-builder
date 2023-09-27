@@ -34,6 +34,7 @@
     "@radix-ui/react-toggle": "^1.0.3",
     "@radix-ui/react-tooltip": "^1.0.6",
     "@tanstack/react-query": "^4.35.3",
+    "@tanstack/react-table": "^8.10.3",
     "@tiptap/extension-placeholder": "^2.1.11",
     "@tiptap/extension-typography": "^2.1.11",
     "@tiptap/extension-underline": "^2.1.11",
