@@ -4,6 +4,7 @@ import type { FormElementsType } from '@form-builder/validation/types';
 interface IForm {
   name: string;
   elements: FormElementsType[];
+  isActive: boolean;
   user: ObjectId;
 }
 
@@ -14,6 +15,10 @@ const formSchema = new Schema<IForm>(
       required: true,
     },
     elements: Array,
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
     user: {
       type: Schema.ObjectId,
       ref: 'User',
