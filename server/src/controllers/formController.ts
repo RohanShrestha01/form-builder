@@ -4,13 +4,26 @@ import Form from '../models/formModel';
 import AppError from '../utils/appError';
 
 export const getAllForms = catchAsyncError(
-  async (req: Request, res: Response) => {
-    const forms = await Form.find({ user: req.userId });
+  async (req: Request, res: Response, next: NextFunction) => {
+    const page = Number(req.query.page) || 0;
+    const pageSize = Number(req.query.pageSize) || 10;
+    const skip = page * pageSize;
+    const total = await Form.countDocuments();
+
+    if (req.query.page && skip >= total)
+      return next(new AppError('This page does not exist', 404));
+
+    const forms = await Form.find({ user: req.userId })
+      .sort(req.query.sort?.toString())
+      .skip(skip)
+      .limit(pageSize)
+      .exec();
 
     res.status(200).json({
       status: 'success',
       data: {
         forms,
+        total,
       },
     });
   },

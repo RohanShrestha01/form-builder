@@ -6,14 +6,14 @@ import Input from '../ui/Input';
 
 interface Props {
   placeholder: string;
-  classname?: string;
+  className?: string;
   disabled?: boolean;
   debounce?: boolean;
 }
 
 export default function SearchInput({
   placeholder,
-  classname = '',
+  className = '',
   disabled = false,
   debounce = false,
 }: Props) {
@@ -47,7 +47,7 @@ export default function SearchInput({
   }, [search, searchParams, setSearchParams, debounce]);
 
   return (
-    <div className={`relative flex items-center ${classname}`}>
+    <div className={`relative flex items-center ${className}`}>
       <Input
         type="text"
         placeholder={placeholder}

@@ -14,18 +14,11 @@ import {
 import { Checkbox } from '@/components/ui/Checkbox';
 import { DataTableColumnHeader } from '../shared/data-table/DataTableColumnHeader';
 import { Switch } from '../ui/Switch';
+import type { FormType } from '../../types';
 
 dayjs.extend(relativeTime);
 
-export type Form = {
-  id: string;
-  name: string;
-  createdAt: Date;
-  updatedAt: Date;
-  isActive: boolean;
-};
-
-export const columns: ColumnDef<Form>[] = [
+export const columns: ColumnDef<FormType>[] = [
   {
     id: 'select',
     header: ({ table }) => (
