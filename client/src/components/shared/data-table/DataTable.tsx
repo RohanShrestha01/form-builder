@@ -8,6 +8,8 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import { Trash2Icon } from 'lucide-react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import {
   Table,
@@ -17,11 +19,23 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/Table';
-
 import { DataTableViewOptions } from './DataTableViewOptions';
 import { DataTablePagination } from './DataTablePagination';
 import { useSearchParams } from 'react-router-dom';
 import SearchInput from '../SearchInput';
+import { Button } from '../../ui/Button';
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '../../ui/AlertDialog';
+import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
+import toast from 'react-hot-toast';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -81,17 +95,71 @@ export function DataTable<TData, TValue>({
     manualPagination: true,
   });
 
+  const axiosPrivate = useAxiosPrivate();
+  const queryClient = useQueryClient();
+  const { mutate, isLoading } = useMutation({
+    mutationFn: () =>
+      axiosPrivate.patch('/forms/bulk-delete', {
+        forms: Object.keys(rowSelection).map(index => data[Number(index)]._id),
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['forms']);
+      toast.success('Forms deleted successfully');
+    },
+    onError: () => toast.error('Error deleting forms'),
+  });
+
   return (
     <div className="space-y-4">
       <div className="mt-2 flex items-center">
-        <div className="flex flex-1 items-center space-x-4">
+        <div className="flex flex-1 items-center gap-4">
           <SearchInput
             placeholder="Filter forms..."
             className="w-72"
             debounce
           />
         </div>
-        <DataTableViewOptions table={table} />
+        <div className="flex gap-4">
+          {table.getIsSomePageRowsSelected() ||
+          table.getIsAllPageRowsSelected() ? (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center gap-2 hover:bg-destructive/5"
+                >
+                  <Trash2Icon className="h-4 w-4" />
+                  <span>Delete</span>
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete
+                    your data and remove your data from our servers.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter className="sm:space-x-4">
+                  <Button
+                    variant="destructive"
+                    isLoading={isLoading}
+                    onClick={() => {
+                      mutate();
+                    }}
+                  >
+                    Yes, delete forms
+                  </Button>
+                  <AlertDialogCancel disabled={isLoading}>
+                    Cancel
+                  </AlertDialogCancel>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          ) : null}
+          <DataTableViewOptions table={table} />
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>

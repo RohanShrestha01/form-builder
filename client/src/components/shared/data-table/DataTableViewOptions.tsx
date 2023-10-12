@@ -47,7 +47,15 @@ export function DataTableViewOptions<TData>({
                 checked={column.getIsVisible()}
                 onCheckedChange={value => column.toggleVisibility(!!value)}
               >
-                {column.id}
+                {column.id === 'isActive'
+                  ? 'Status'
+                  : column.id === 'createdAt'
+                  ? 'Created Date'
+                  : column.id === 'updatedAt'
+                  ? 'Last Updated'
+                  : column.id === 'name'
+                  ? 'Form Name'
+                  : column.id}
               </DropdownMenuCheckboxItem>
             );
           })}

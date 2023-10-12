@@ -29,6 +29,18 @@ export const getAllForms = catchAsyncError(
   },
 );
 
+export const deleteForms = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { forms } = req.body;
+    if (!forms)
+      return next(new AppError('Please provide list of form id!', 400));
+
+    await Form.deleteMany({ _id: { $in: forms } });
+
+    res.sendStatus(204);
+  },
+);
+
 export const getForm = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const form = await Form.findById(req.params.id);
