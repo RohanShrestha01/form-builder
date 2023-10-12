@@ -9,7 +9,6 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { Trash2Icon } from 'lucide-react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import {
   Table,
@@ -34,20 +33,22 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '../../ui/AlertDialog';
-import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
-import toast from 'react-hot-toast';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   totalEntries: number;
+  bulkDeleteHandler: (items: string[]) => void;
+  bulkDeleteIsLoading: boolean;
   isFetching?: boolean;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends { _id: string }, TValue>({
   columns,
   data,
   totalEntries,
+  bulkDeleteHandler,
+  bulkDeleteIsLoading,
   isFetching = false,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -95,29 +96,11 @@ export function DataTable<TData, TValue>({
     manualPagination: true,
   });
 
-  const axiosPrivate = useAxiosPrivate();
-  const queryClient = useQueryClient();
-  const { mutate, isLoading } = useMutation({
-    mutationFn: () =>
-      axiosPrivate.patch('/forms/bulk-delete', {
-        forms: Object.keys(rowSelection).map(index => data[Number(index)]._id),
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['forms']);
-      toast.success('Forms deleted successfully');
-    },
-    onError: () => toast.error('Error deleting forms'),
-  });
-
   return (
     <div className="space-y-4">
       <div className="mt-2 flex items-center">
         <div className="flex flex-1 items-center gap-4">
-          <SearchInput
-            placeholder="Filter forms..."
-            className="w-72"
-            debounce
-          />
+          <SearchInput placeholder="Filter data..." className="w-72" debounce />
         </div>
         <div className="flex gap-4">
           {table.getIsSomePageRowsSelected() ||
@@ -144,14 +127,18 @@ export function DataTable<TData, TValue>({
                 <AlertDialogFooter className="sm:space-x-4">
                   <Button
                     variant="destructive"
-                    isLoading={isLoading}
+                    isLoading={bulkDeleteIsLoading}
                     onClick={() => {
-                      mutate();
+                      bulkDeleteHandler(
+                        Object.keys(rowSelection).map(
+                          index => data[Number(index)]._id,
+                        ),
+                      );
                     }}
                   >
-                    Yes, delete forms
+                    Yes, delete data
                   </Button>
-                  <AlertDialogCancel disabled={isLoading}>
+                  <AlertDialogCancel disabled={bulkDeleteIsLoading}>
                     Cancel
                   </AlertDialogCancel>
                 </AlertDialogFooter>

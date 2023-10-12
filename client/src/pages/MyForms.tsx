@@ -14,6 +14,8 @@ import { Checkbox } from '../components/ui/Checkbox';
 import { DataTableColumnHeader } from '../components/shared/data-table/DataTableColumnHeader';
 import { Switch } from '../components/ui/Switch';
 import DataTableRowActions from '../components/my-forms/DataTableRowActions';
+import Error from './Error';
+import DataTableShimmer from '../components/shared/data-table/DataTableShimmer';
 
 dayjs.extend(relativeTime);
 
@@ -50,6 +52,18 @@ export default function MyForms() {
       toast.success('Form updated successfully');
     },
     onError: () => toast.error('Error updating form'),
+  });
+
+  const bulkDeleteMutation = useMutation({
+    mutationFn: (forms: string[]) =>
+      axiosPrivate.patch('/forms/bulk-delete', {
+        forms,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['forms']);
+      toast.success('Forms deleted successfully');
+    },
+    onError: () => toast.error('Error deleting forms'),
   });
 
   const columns: ColumnDef<FormType>[] = useMemo(
@@ -123,7 +137,8 @@ export default function MyForms() {
     [mutation],
   );
 
-  if (isLoading || isError) return;
+  if (isLoading) return <DataTableShimmer columns={4} />;
+  if (isError) return <Error fullScreen={false} />;
 
   return (
     <DataTable<FormType, string>
@@ -131,6 +146,10 @@ export default function MyForms() {
       data={data.forms}
       totalEntries={data.total}
       isFetching={isFetching}
+      bulkDeleteHandler={forms => {
+        bulkDeleteMutation.mutate(forms);
+      }}
+      bulkDeleteIsLoading={bulkDeleteMutation.isLoading}
     />
   );
 }

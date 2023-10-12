@@ -1,7 +1,7 @@
 import { isRouteErrorResponse, useRouteError } from 'react-router-dom';
 import ErrorSvg from '../assets/error.svg';
 
-export default function Error() {
+export default function Error({ fullScreen = true }: { fullScreen?: boolean }) {
   const error = useRouteError();
 
   return isRouteErrorResponse(error) && error.status === 404 ? (
@@ -24,7 +24,11 @@ export default function Error() {
       </a>
     </div>
   ) : (
-    <div className="mx-auto flex h-screen flex-col items-center justify-center gap-4 pb-32">
+    <div
+      className={`mx-auto flex flex-col items-center justify-center gap-4 ${
+        fullScreen ? 'h-screen pb-32' : 'mt-10'
+      }`}
+    >
       <img src={ErrorSvg} alt="Error" className="h-80" />
       <span className="font-medium">
         Oops! Something went wrong. Please refresh or try again later!
