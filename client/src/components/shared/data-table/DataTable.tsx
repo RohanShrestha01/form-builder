@@ -51,11 +51,15 @@ export function DataTable<TData extends { _id: string }, TValue>({
   bulkDeleteIsLoading,
   isFetching = false,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const sort = searchParams.get('sort');
+  const [sorting, setSorting] = useState<SortingState>(
+    sort ? [{ desc: sort.startsWith('-'), id: sort.replace('-', '') }] : [],
+  );
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
-  const [searchParams, setSearchParams] = useSearchParams();
   const pagination = {
     pageIndex: Number(searchParams.get('page')) || 0,
     pageSize: Number(searchParams.get('pageSize')) || 10,
@@ -82,6 +86,7 @@ export function DataTable<TData extends { _id: string }, TValue>({
     },
     pageCount: Math.ceil(totalEntries / pagination.pageSize),
     onPaginationChange: updater => {
+      setRowSelection({});
       if (typeof updater !== 'function') return;
       const { pageIndex, pageSize } = updater(pagination);
       setSearchParams(searchParams => {
@@ -134,6 +139,9 @@ export function DataTable<TData extends { _id: string }, TValue>({
                           index => data[Number(index)]._id,
                         ),
                       );
+                      setRowSelection({});
+                      if (table.getIsAllPageRowsSelected())
+                        table.setPageIndex(pagination.pageIndex - 1);
                     }}
                   >
                     Yes, delete data
