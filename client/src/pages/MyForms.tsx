@@ -30,9 +30,10 @@ export default function MyForms() {
   const queryClient = useQueryClient();
 
   const params = {
-    page: searchParams.get('page'),
-    pageSize: searchParams.get('pageSize'),
-    sort: searchParams.get('sort'),
+    page: searchParams.get('page') || 0,
+    pageSize: searchParams.get('pageSize') || 10,
+    sort: searchParams.get('sort') || '-updatedAt',
+    search: searchParams.get('query'),
   };
   const { data, isLoading, isError, isFetching } = useQuery<FormsResponseType>({
     queryKey: ['forms', params],

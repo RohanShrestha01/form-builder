@@ -8,12 +8,17 @@ export const getAllForms = catchAsyncError(
     const page = Number(req.query.page) || 0;
     const pageSize = Number(req.query.pageSize) || 10;
     const skip = page * pageSize;
-    const total = await Form.countDocuments();
+    const searchQuery = req.query.search;
 
-    if (req.query.page && skip >= total)
+    const query = searchQuery
+      ? { user: req.userId, name: { $regex: searchQuery, $options: 'i' } }
+      : { user: req.userId };
+    const total = await Form.countDocuments(query);
+
+    if (req.query.page && req.query.page !== '0' && skip >= total)
       return next(new AppError('This page does not exist', 404));
 
-    const forms = await Form.find({ user: req.userId })
+    const forms = await Form.find(query)
       .sort(req.query.sort?.toString())
       .skip(skip)
       .limit(pageSize)
