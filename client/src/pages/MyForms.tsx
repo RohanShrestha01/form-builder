@@ -32,7 +32,7 @@ export default function MyForms() {
   const params = {
     page: searchParams.get('page') || 0,
     pageSize: searchParams.get('pageSize') || 10,
-    sort: searchParams.get('sort') || '-updatedAt',
+    sort: searchParams.get('sort') || '-createdAt',
     search: searchParams.get('query'),
   };
   const { data, isLoading, isError, isFetching } = useQuery<FormsResponseType>({

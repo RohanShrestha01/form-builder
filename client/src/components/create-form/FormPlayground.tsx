@@ -23,9 +23,14 @@ import { useFormPlaygroundStore } from '../../stores/formPlaygroundStore';
 interface Props {
   isDropped: boolean;
   resetIsDropped: () => void;
+  isUpdate?: boolean;
 }
 
-export default function FormPlayground({ isDropped, resetIsDropped }: Props) {
+export default function FormPlayground({
+  isDropped,
+  resetIsDropped,
+  isUpdate = false,
+}: Props) {
   const formElements = useFormPlaygroundStore(state => state.formElements);
   const moveFormElement = useFormPlaygroundStore(
     state => state.moveFormElement,
@@ -79,7 +84,11 @@ export default function FormPlayground({ isDropped, resetIsDropped }: Props) {
                 : 'Drag a element from the right to this area'}
             </p>
           ) : (
-            <ScrollArea className="h-[calc(100vh-212px)]">
+            <ScrollArea
+              className={
+                isUpdate ? 'h-[calc(100vh-247px)]' : 'h-[calc(100vh-212px)]'
+              }
+            >
               <ul className="space-y-5 py-5 pl-5 pr-5">
                 {formElements.map(element => (
                   <FormElementCard key={element.id} formElement={element} />

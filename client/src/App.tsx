@@ -12,6 +12,7 @@ import PersistLogin from './components/auth/PersistLogin';
 import Error from './pages/Error';
 import Settings from './pages/Settings';
 import MyForms from './pages/MyForms';
+import UpdateForm from './pages/UpdateForm';
 
 const router = createBrowserRouter([
   {
@@ -61,6 +62,10 @@ const router = createBrowserRouter([
               {
                 path: '/my-forms',
                 element: <MyForms />,
+              },
+              {
+                path: '/my-forms/:id/edit',
+                element: <UpdateForm />,
               },
               {
                 path: '/settings',

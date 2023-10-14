@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { DndContext, DragOverlay, useSensor, useSensors } from '@dnd-kit/core';
 import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
@@ -9,7 +9,7 @@ import {
   FormElementButton,
   FormElementButtonProps,
 } from '../components/create-form/DraggableButton';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FormPlayground from '../components/create-form/FormPlayground';
 import Input from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
@@ -26,16 +26,25 @@ import {
   AlertDialogTrigger,
 } from '../components/ui/AlertDialog';
 import { useFormPlaygroundStore } from '../stores/formPlaygroundStore';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import toast from 'react-hot-toast';
 import DemoInfoCard from '../components/create-form/DemoInfoCard';
+import type { FormType } from '../types';
 
-export default function CreateForm() {
+interface Props {
+  formType?: 'add' | 'edit';
+  form?: FormType;
+}
+
+export default function CreateForm({ formType = 'add', form }: Props) {
   const { pathname } = useLocation();
+  const { id } = useParams();
+  const navigate = useNavigate();
   const isDemo = pathname === '/demo';
+  const queryClient = useQueryClient();
 
-  const [formName, setFormName] = useState('');
+  const [formName, setFormName] = useState(form?.name ?? '');
   const [activeButton, setActiveButton] =
     useState<FormElementButtonProps | null>(null);
   const [isDropped, setIsDropped] = useState(false);
@@ -45,6 +54,10 @@ export default function CreateForm() {
     state => state.removeAllFormElements,
   );
   const formElements = useFormPlaygroundStore(state => state.formElements);
+
+  useEffect(() => {
+    if (formType === 'add') removeAllFormElements();
+  }, [removeAllFormElements, formType]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -56,16 +69,25 @@ export default function CreateForm() {
   const axiosPrivate = useAxiosPrivate();
   const { mutate, isLoading } = useMutation({
     mutationFn: () =>
-      axiosPrivate.post('/forms', {
-        name: formName,
-        elements: formElements,
+      axiosPrivate({
+        url: formType === 'add' ? '/forms' : '/forms/' + id,
+        method: formType === 'add' ? 'post' : 'patch',
+        data: {
+          name: formName,
+          elements: formElements,
+        },
       }),
     onSuccess: () => {
+      if (formType === 'edit') navigate('/my-forms');
+      queryClient.invalidateQueries(['forms']);
       setFormName('');
       removeAllFormElements();
-      toast.success('Form created successfully');
+      toast.success(
+        `Form ${formType === 'add' ? 'created' : 'updated'} successfully`,
+      );
     },
-    onError: () => toast.error('Error creating form'),
+    onError: () =>
+      toast.error(`Error ${formType === 'add' ? 'creating' : 'updating'} form`),
   });
 
   return (
@@ -90,7 +112,7 @@ export default function CreateForm() {
       }}
     >
       <div className="flex gap-12">
-        <FormElements />
+        <FormElements isUpdate={formType === 'edit'} />
         <form
           className="flex flex-grow flex-col"
           onSubmit={e => {
@@ -120,9 +142,15 @@ export default function CreateForm() {
           <FormPlayground
             isDropped={isDropped}
             resetIsDropped={() => setIsDropped(false)}
+            isUpdate={formType === 'edit'}
           />
           <section className="mt-5 flex items-center gap-5 self-end">
             {isDemo && <DemoInfoCard />}
+            {form ? (
+              <Button onClick={() => navigate('/my-forms')} variant="outline">
+                Cancel
+              </Button>
+            ) : null}
             {formElements.length !== 0 ? (
               <AlertDialog>
                 <AlertDialogTrigger asChild>
@@ -154,7 +182,7 @@ export default function CreateForm() {
               className={isDemo ? 'gap-2.5' : ''}
             >
               {isDemo && <LockIcon className="h-[18px] w-[18px]" />}
-              <span>Save Form</span>
+              <span>{form ? 'Update Form' : 'Save Form'}</span>
             </Button>
           </section>
         </form>

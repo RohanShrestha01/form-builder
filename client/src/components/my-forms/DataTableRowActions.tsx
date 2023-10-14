@@ -22,9 +22,11 @@ import {
   AlertDialogTrigger,
 } from '../ui/AlertDialog';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function DataTableRowActions({ formId }: { formId: string }) {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const queryClient = useQueryClient();
   const axiosPrivate = useAxiosPrivate();
@@ -50,7 +52,10 @@ export default function DataTableRowActions({ formId }: { formId: string }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem className="flex items-center gap-2">
+        <DropdownMenuItem
+          className="flex items-center gap-2"
+          onClick={() => navigate(formId + '/edit')}
+        >
           <EditIcon className="h-4 w-4 text-muted-foreground" />
           <span>Edit</span>
         </DropdownMenuItem>
