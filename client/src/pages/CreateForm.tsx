@@ -13,7 +13,7 @@ import { useEffect, useState } from 'react';
 import FormPlayground from '../components/create-form/FormPlayground';
 import Input from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
-import { EyeIcon, LockIcon } from 'lucide-react';
+import { EyeIcon, HammerIcon, LockIcon } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,6 +31,8 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import toast from 'react-hot-toast';
 import DemoInfoCard from '../components/create-form/DemoInfoCard';
 import type { FormType } from '../types';
+import { Switch } from '../components/ui/Switch';
+import FormPreview from '../components/create-form/FormPreview';
 
 interface Props {
   formType?: 'add' | 'edit';
@@ -44,6 +46,8 @@ export default function CreateForm({ formType = 'add', form }: Props) {
   const isDemo = pathname === '/demo';
   const queryClient = useQueryClient();
 
+  const [isPreview, setIsPreview] = useState(false);
+
   const [formName, setFormName] = useState(form?.name ?? '');
   const [activeButton, setActiveButton] =
     useState<FormElementButtonProps | null>(null);
@@ -56,7 +60,9 @@ export default function CreateForm({ formType = 'add', form }: Props) {
   const formElements = useFormPlaygroundStore(state => state.formElements);
 
   useEffect(() => {
-    if (formType === 'add') removeAllFormElements();
+    return () => {
+      if (formType === 'edit') removeAllFormElements();
+    };
   }, [removeAllFormElements, formType]);
 
   const sensors = useSensors(
@@ -130,20 +136,39 @@ export default function CreateForm({ formType = 'add', form }: Props) {
                 onChange={e => setFormName(e.target.value)}
               />
             </div>
-            <Button
-              type="button"
-              variant="ghost"
-              className="gap-2 text-primary hover:text-primary"
-            >
-              <EyeIcon className="h-5 w-5" />
-              <span>Preview</span>
-            </Button>
+            <div className="flex items-center gap-4 text-sm font-medium">
+              <div
+                className={`flex items-center gap-2 transition-colors ${
+                  isPreview ? '' : 'text-primary'
+                }`}
+              >
+                <HammerIcon className="h-5 w-5" />
+                <span>Builder</span>
+              </div>
+              <Switch
+                className="data-[state=unchecked]:bg-primary"
+                checked={isPreview}
+                onCheckedChange={setIsPreview}
+              />
+              <div
+                className={`flex items-center gap-2 transition-colors ${
+                  isPreview ? 'text-primary' : ''
+                }`}
+              >
+                <EyeIcon className="h-5 w-5" />
+                <span>Preview</span>
+              </div>
+            </div>
           </section>
-          <FormPlayground
-            isDropped={isDropped}
-            resetIsDropped={() => setIsDropped(false)}
-            isUpdate={formType === 'edit'}
-          />
+          {isPreview ? (
+            <FormPreview />
+          ) : (
+            <FormPlayground
+              isDropped={isDropped}
+              resetIsDropped={() => setIsDropped(false)}
+              isUpdate={formType === 'edit'}
+            />
+          )}
           <section className="mt-5 flex items-center gap-5 self-end">
             {isDemo && <DemoInfoCard />}
             {form ? (

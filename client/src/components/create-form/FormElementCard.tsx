@@ -20,6 +20,15 @@ import { DateRangePicker } from '../shared/DateRangePicker';
 import Options from './Options';
 import { useFormPlaygroundStore } from '../../stores/formPlaygroundStore';
 import type { FormElementsType } from '@form-builder/validation/types';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/Select';
+import { RadioGroup, RadioGroupItem } from '../ui/RadioGroup';
+import { Combobox } from '../ui/Combobox';
 
 const animateLayoutChanges: AnimateLayoutChanges = args => {
   const { isSorting, wasDragging } = args;
@@ -29,10 +38,14 @@ const animateLayoutChanges: AnimateLayoutChanges = args => {
 
 interface Props {
   formElement: FormElementsType;
+  isView?: boolean;
 }
 
-export default function FormElementCard({ formElement }: Props) {
-  const { id, label, type, required } = formElement;
+export default function FormElementCard({
+  formElement,
+  isView = false,
+}: Props) {
+  const { id, label, type, required, options } = formElement;
   const removeFormElement = useFormPlaygroundStore(
     state => state.removeFormElement,
   );
@@ -57,22 +70,30 @@ export default function FormElementCard({ formElement }: Props) {
 
   return (
     <article
-      className={`relative flex gap-2 rounded-md bg-white py-3 pl-2 pr-4 shadow ${
+      className={`relative flex gap-2 rounded-md bg-white py-3 shadow ${
         isDragging ? 'z-10' : ''
-      }`}
+      } ${isView ? 'px-5' : 'pl-2 pr-4'}`}
       ref={setNodeRef}
       style={cardStyle}
     >
+      {isView ? null : (
+        <div
+          className={`flex cursor-move items-center rounded px-2 ${
+            isDragging ? 'bg-muted' : 'hover:bg-muted'
+          }`}
+          {...listeners}
+          {...attributes}
+        >
+          <GripVerticalIcon className="h-7 w-7 text-muted-foreground transition-colors duration-200" />
+        </div>
+      )}
       <div
-        className={`flex cursor-move items-center rounded px-2 ${
-          isDragging ? 'bg-muted' : 'hover:bg-muted'
+        className={`flex-grow space-y-2 ${
+          ['heading', 'description', 'checkbox', 'switch'].includes(type)
+            ? ''
+            : 'pb-2'
         }`}
-        {...listeners}
-        {...attributes}
       >
-        <GripVerticalIcon className="h-7 w-7 text-muted-foreground transition-colors duration-200" />
-      </div>
-      <div className="flex-grow space-y-2 pb-2">
         <div className="flex items-center gap-8">
           <div className="flex w-full items-center gap-5">
             {type === 'switch' ? (
@@ -90,41 +111,44 @@ export default function FormElementCard({ formElement }: Props) {
               updateHandler={html => {
                 updateLabel(id, html);
               }}
+              readOnly={isView}
             />
           </div>
-          <div className="flex items-center">
-            {['heading', 'description', 'switch', 'checkbox'].includes(
-              type,
-            ) ? null : (
-              <div className="flex items-center gap-2">
-                <Switch
-                  id={'required-' + id}
-                  checked={required}
-                  onCheckedChange={() => toggleRequired(id)}
-                />
-                <Label
-                  className="cursor-pointer font-normal"
-                  htmlFor={'required-' + id}
+          {isView ? null : (
+            <div className="flex items-center">
+              {['heading', 'description', 'switch', 'checkbox'].includes(
+                type,
+              ) ? null : (
+                <div className="flex items-center gap-2">
+                  <Switch
+                    id={'required-' + id}
+                    checked={required}
+                    onCheckedChange={() => toggleRequired(id)}
+                  />
+                  <Label
+                    className="cursor-pointer font-normal"
+                    htmlFor={'required-' + id}
+                  >
+                    Required
+                  </Label>
+                </div>
+              )}
+              <Separator orientation="vertical" className="mx-4 h-7" />
+              <Tooltip asChild title="Delete">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-full hover:bg-destructive/5"
+                  onClick={() => {
+                    removeFormElement(id);
+                  }}
                 >
-                  Required
-                </Label>
-              </div>
-            )}
-            <Separator orientation="vertical" className="mx-4 h-7" />
-            <Tooltip asChild title="Delete">
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="rounded-full hover:bg-destructive/5"
-                onClick={() => {
-                  removeFormElement(id);
-                }}
-              >
-                <Trash2Icon className="h-5 w-5 text-destructive" />
-              </Button>
-            </Tooltip>
-          </div>
+                  <Trash2Icon className="h-5 w-5 text-destructive" />
+                </Button>
+              </Tooltip>
+            </div>
+          )}
         </div>
         {type === 'single-line' ? (
           <Input placeholder="Single line text" />
@@ -136,8 +160,51 @@ export default function FormElementCard({ formElement }: Props) {
           <RichTextEditor />
         ) : ['checklist', 'multi-choice', 'dropdown', 'combobox'].includes(
             type,
-          ) ? (
+          ) && !isView ? (
           <Options type={type} id={id} />
+        ) : type === 'checklist' ? (
+          <ul className="space-y-3">
+            {options?.map(({ label, value }) => (
+              <li key={value} className="flex items-center gap-3">
+                <Checkbox id={value} />
+                <Label
+                  htmlFor={value}
+                  className="flex h-5 items-center font-normal"
+                >
+                  {label}
+                </Label>
+              </li>
+            ))}
+          </ul>
+        ) : type === 'multi-choice' ? (
+          <RadioGroup className="gap-3">
+            {options?.map(({ label, value }) => (
+              <div key={value} className="flex items-center space-x-3">
+                <RadioGroupItem value={value} id={value} />
+                <Label
+                  htmlFor={value}
+                  className="flex h-5 items-center font-normal"
+                >
+                  {label}
+                </Label>
+              </div>
+            ))}
+          </RadioGroup>
+        ) : type === 'dropdown' ? (
+          <Select>
+            <SelectTrigger>
+              <SelectValue placeholder="Select an option..." />
+            </SelectTrigger>
+            <SelectContent>
+              {options?.map(({ label, value }) => (
+                <SelectItem value={value} key={value}>
+                  {label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        ) : type === 'combobox' && options ? (
+          <Combobox options={options} />
         ) : type === 'date' ? (
           <DatePicker />
         ) : type === 'date-range' ? (

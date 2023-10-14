@@ -104,12 +104,14 @@ interface Props {
   placeholder?: string;
   content?: string;
   updateHandler?: (html: string) => void;
+  readOnly?: boolean;
 }
 
 export default function BubbleMenuEditor({
   placeholder,
   content,
   updateHandler,
+  readOnly,
 }: Props) {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -145,6 +147,7 @@ export default function BubbleMenuEditor({
         class: 'outline-none min-h-7 prose prose-slate max-w-none',
       },
     },
+    editable: !readOnly,
     onFocus: ({ editor, event }) => {
       if ('sourceCapabilities' in event && event.sourceCapabilities)
         editor.commands.selectAll();
@@ -171,9 +174,9 @@ export default function BubbleMenuEditor({
 
       <EditorContent
         editor={editor}
-        className={`min-h-9 w-full border-b px-0.5 py-1 transition-colors ${
+        className={`min-h-9 w-full transition-colors ${
           isFocused ? 'border-primary' : 'hover:border-ring'
-        }`}
+        } ${readOnly ? '' : 'border-b px-0.5 py-1'}`}
       />
     </>
   );

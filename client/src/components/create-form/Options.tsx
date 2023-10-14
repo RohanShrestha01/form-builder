@@ -25,15 +25,13 @@ export default function Options({ type, id }: Props) {
     <ul className="space-y-3">
       {options.map(({ label, value }, i) => (
         <li className="flex items-center gap-4" key={value}>
-          <div>
-            {type === 'checklist' ? (
-              <Checkbox />
-            ) : type === 'multi-choice' ? (
-              <CircleIcon className="h-4 w-4 opacity-50" />
-            ) : (
-              <span className="text-sm">{i + 1}.</span>
-            )}
-          </div>
+          {type === 'checklist' ? (
+            <Checkbox />
+          ) : type === 'multi-choice' ? (
+            <CircleIcon className="h-4 w-4 opacity-50" />
+          ) : (
+            <span className="text-sm">{i + 1}.</span>
+          )}
           <Input
             className="h-8 rounded-none border-0 border-b px-0 shadow-none"
             value={label}
