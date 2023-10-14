@@ -13,6 +13,7 @@ export default {
       fontFamily: {
         sans: ['Open Sans', ...defaultTheme.fontFamily.sans],
         mono: ['JetBrains Mono', ...defaultTheme.fontFamily.mono],
+        cursive: 'Dancing Script',
       },
       colors: {
         border: colors.slate[200],
