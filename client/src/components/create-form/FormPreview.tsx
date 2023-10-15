@@ -15,7 +15,9 @@ export default function FormPreview() {
         <ScrollArea className="h-[calc(100vh-212px)]">
           <ul className="space-y-5 p-5">
             {formElements.map(element => (
-              <FormElementCard key={element.id} formElement={element} isView />
+              <li key={element.id}>
+                <FormElementCard formElement={element} isView />
+              </li>
             ))}
           </ul>
         </ScrollArea>

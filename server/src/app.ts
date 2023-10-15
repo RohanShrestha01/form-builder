@@ -39,9 +39,9 @@ app.use(mongoSanitize());
 app.use(hpp());
 
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/forms', formRouter);
 app.use(verifyJWT);
 app.use('/api/v1/user', userRouter);
-app.use('/api/v1/forms', formRouter);
 
 app.all('*', (req, _res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

@@ -1,6 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { MoreHorizontal, EditIcon, Trash2Icon } from 'lucide-react';
+import {
+  MoreHorizontal,
+  EditIcon,
+  Trash2Icon,
+  LinkIcon,
+  FilesIcon,
+} from 'lucide-react';
 
 import { Button } from '@/components/ui/Button';
 import {
@@ -52,6 +58,19 @@ export default function DataTableRowActions({ formId }: { formId: string }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <DropdownMenuItem
+          className="flex items-center gap-2"
+          onClick={() =>
+            window.open(window.location.origin + '/forms/' + formId, '_blank')
+          }
+        >
+          <LinkIcon className="h-4 w-4 text-muted-foreground" />
+          <span>Open Form Link</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem className="flex items-center gap-2">
+          <FilesIcon className="h-4 w-4 text-muted-foreground" />
+          <span>Show Responses</span>
+        </DropdownMenuItem>
         <DropdownMenuItem
           className="flex items-center gap-2"
           onClick={() => navigate(formId + '/edit')}

@@ -67,6 +67,9 @@ export const createForm = catchAsyncError(
     if (!name)
       return next(new AppError('Please provide the name of the form!', 400));
 
+    if (elements.length === 0)
+      return next(new AppError('Please add some elements to the form!', 400));
+
     const newForm = await Form.create({
       name,
       elements: elements ?? [],

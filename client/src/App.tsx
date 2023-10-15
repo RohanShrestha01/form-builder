@@ -13,6 +13,7 @@ import Error from './pages/Error';
 import Settings from './pages/Settings';
 import MyForms from './pages/MyForms';
 import UpdateForm from './pages/UpdateForm';
+import GeneratedForm from './pages/GeneratedForm';
 
 const router = createBrowserRouter([
   {
@@ -76,6 +77,11 @@ const router = createBrowserRouter([
         ],
       },
     ],
+  },
+  {
+    path: 'forms/:id',
+    element: <GeneratedForm />,
+    errorElement: <Error />,
   },
 ]);
 

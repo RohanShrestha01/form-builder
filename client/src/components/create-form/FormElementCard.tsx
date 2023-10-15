@@ -220,6 +220,9 @@ export default function FormElementCard({
             className="pt-1.5 text-muted-foreground"
           />
         ) : null}
+        {isView && required ? (
+          <div className="pt-1 text-sm text-destructive">* Required</div>
+        ) : null}
       </div>
     </article>
   );

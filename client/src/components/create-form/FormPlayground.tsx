@@ -91,7 +91,9 @@ export default function FormPlayground({
             >
               <ul className="space-y-5 py-5 pl-5 pr-5">
                 {formElements.map(element => (
-                  <FormElementCard key={element.id} formElement={element} />
+                  <li key={element.id}>
+                    <FormElementCard formElement={element} />
+                  </li>
                 ))}
               </ul>
               <div ref={cardsEndRef} />

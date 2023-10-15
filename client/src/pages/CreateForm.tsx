@@ -123,6 +123,10 @@ export default function CreateForm({ formType = 'add', form }: Props) {
           className="flex flex-grow flex-col"
           onSubmit={e => {
             e.preventDefault();
+            if (formElements.length === 0) {
+              toast.error('Form is empty!');
+              return;
+            }
             mutate();
           }}
         >
