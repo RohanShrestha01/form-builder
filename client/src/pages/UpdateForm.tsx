@@ -17,12 +17,12 @@ export default function UpdateForm() {
     state => state.setFormElements,
   );
 
-  const { data, isLoading, isError } = useQuery<FormType>({
+  const { data, isPending, isError } = useQuery<FormType>({
     queryKey: ['forms', id],
     queryFn: () => axiosPrivate('/forms/' + id).then(res => res.data.data.form),
   });
 
-  if (isLoading)
+  if (isPending)
     return (
       <img
         src={LoadingSvg}

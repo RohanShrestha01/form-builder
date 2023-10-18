@@ -79,7 +79,7 @@ export default function ResetPassword() {
             type="password"
             className="text-slate-600"
             errorMessage={errors.newPassword?.message}
-            disabled={mutation.isLoading}
+            disabled={mutation.isPending}
             {...register('newPassword')}
           />
           <InputField
@@ -87,7 +87,7 @@ export default function ResetPassword() {
             type="password"
             className="text-slate-600"
             errorMessage={errors.cNewPassword?.message}
-            disabled={mutation.isLoading}
+            disabled={mutation.isPending}
             {...register('cNewPassword')}
           />
         </CardContent>
@@ -95,7 +95,7 @@ export default function ResetPassword() {
           <Button
             type="submit"
             className="w-full"
-            isLoading={mutation.isLoading}
+            isLoading={mutation.isPending}
           >
             Reset Password
           </Button>

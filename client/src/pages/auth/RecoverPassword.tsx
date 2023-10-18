@@ -78,7 +78,7 @@ export default function RecoverPassword() {
             type="email"
             className="text-slate-600"
             errorMessage={errors.email?.message}
-            disabled={mutation.isLoading}
+            disabled={mutation.isPending}
             {...register('email')}
           />
         </CardContent>
@@ -86,7 +86,7 @@ export default function RecoverPassword() {
           <Button
             type="submit"
             className="w-full"
-            isLoading={mutation.isLoading}
+            isLoading={mutation.isPending}
           >
             Recover Password
           </Button>

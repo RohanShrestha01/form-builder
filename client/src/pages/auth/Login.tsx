@@ -83,7 +83,7 @@ export default function Login() {
           <CardDescription>Sign in to your account</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-          <SignInButtons disabled={mutation.isLoading} />
+          <SignInButtons disabled={mutation.isPending} />
           <div className="relative z-10 text-center">
             <hr className="absolute left-0 right-0 top-1/2 -z-10" />
             <p className="inline-block bg-white px-4 text-sm uppercase text-muted-foreground">
@@ -96,7 +96,7 @@ export default function Login() {
             placeholder="test@mail.com"
             className="text-slate-600"
             required
-            disabled={mutation.isLoading}
+            disabled={mutation.isPending}
             {...register('email')}
           />
           <InputField
@@ -105,7 +105,7 @@ export default function Login() {
             placeholder="Password123@"
             className="text-slate-600"
             required
-            disabled={mutation.isLoading}
+            disabled={mutation.isPending}
             {...register('password')}
           />
           <div className="flex items-center justify-between px-0.5">
@@ -114,7 +114,7 @@ export default function Login() {
                 type="checkbox"
                 id="remember-me"
                 className="h-3.5 w-3.5 cursor-pointer accent-primary"
-                disabled={mutation.isLoading}
+                disabled={mutation.isPending}
                 checked={persist}
                 onChange={() => {
                   setPersist(prev => !prev);
@@ -139,7 +139,7 @@ export default function Login() {
           <Button
             type="submit"
             className="w-full"
-            isLoading={mutation.isLoading}
+            isLoading={mutation.isPending}
           >
             Sign In
           </Button>

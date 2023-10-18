@@ -49,7 +49,7 @@ const ClearFormButton = () => (
 export default function GeneratedForm() {
   const { id } = useParams();
 
-  const { data, isLoading, isError } = useQuery<FormType>({
+  const { data, isPending, isError } = useQuery<FormType>({
     queryKey: ['forms', id],
     queryFn: () => axios('/forms/' + id).then(res => res.data.data.form),
   });
@@ -76,7 +76,7 @@ export default function GeneratedForm() {
           </div>
         </div>
       </header>
-      {isLoading ? (
+      {isPending ? (
         <img
           src={LoadingSvg}
           alt="Loading Spinner"

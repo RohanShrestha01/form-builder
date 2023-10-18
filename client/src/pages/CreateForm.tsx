@@ -73,7 +73,7 @@ export default function CreateForm({ formType = 'add', form }: Props) {
   );
 
   const axiosPrivate = useAxiosPrivate();
-  const { mutate, isLoading } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: () =>
       axiosPrivate({
         url: formType === 'add' ? '/forms' : '/forms/' + id,
@@ -85,7 +85,9 @@ export default function CreateForm({ formType = 'add', form }: Props) {
       }),
     onSuccess: () => {
       if (formType === 'edit') navigate('/my-forms');
-      queryClient.invalidateQueries(['forms']);
+      queryClient.invalidateQueries({
+        queryKey: ['forms'],
+      });
       setFormName('');
       removeAllFormElements();
       toast.success(
@@ -207,7 +209,7 @@ export default function CreateForm({ formType = 'add', form }: Props) {
             ) : null}
             <Button
               disabled={isDemo}
-              isLoading={isLoading}
+              isLoading={isPending}
               className={isDemo ? 'gap-2.5' : ''}
             >
               {isDemo && <LockIcon className="h-[18px] w-[18px]" />}

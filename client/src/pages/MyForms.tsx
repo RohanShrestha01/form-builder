@@ -1,5 +1,10 @@
 import { useMemo } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import { ColumnDef } from '@tanstack/react-table';
 import toast from 'react-hot-toast';
@@ -35,21 +40,23 @@ export default function MyForms() {
     sort: searchParams.get('sort') || '-createdAt',
     search: searchParams.get('query'),
   };
-  const { data, isLoading, isError, isFetching } = useQuery<FormsResponseType>({
+  const { data, isPending, isError, isFetching } = useQuery<FormsResponseType>({
     queryKey: ['forms', params],
     queryFn: () =>
       axiosPrivate({
         url: '/forms',
         params,
       }).then(res => res.data.data),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 
   const mutation = useMutation({
     mutationFn: ({ formId, isActive }: { formId: string; isActive: boolean }) =>
       axiosPrivate.patch('/forms/' + formId, { isActive }),
     onSuccess: () => {
-      queryClient.invalidateQueries(['forms']);
+      queryClient.invalidateQueries({
+        queryKey: ['forms'],
+      });
       toast.success('Form updated successfully');
     },
     onError: () => toast.error('Error updating form'),
@@ -61,7 +68,9 @@ export default function MyForms() {
         forms,
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries(['forms']);
+      queryClient.invalidateQueries({
+        queryKey: ['forms'],
+      });
       toast.success('Forms deleted successfully');
     },
     onError: () => toast.error('Error deleting forms'),
@@ -97,7 +106,7 @@ export default function MyForms() {
           <Switch
             checked={row.original.isActive}
             disabled={
-              mutation.isLoading &&
+              mutation.isPending &&
               mutation.variables?.formId === row.original._id
             }
             onCheckedChange={checked => {
@@ -138,7 +147,7 @@ export default function MyForms() {
     [mutation],
   );
 
-  if (isLoading) return <DataTableShimmer columns={4} />;
+  if (isPending) return <DataTableShimmer columns={4} />;
   if (isError) return <Error fullScreen={false} />;
 
   return (
@@ -150,7 +159,7 @@ export default function MyForms() {
       bulkDeleteHandler={forms => {
         bulkDeleteMutation.mutate(forms);
       }}
-      bulkDeleteIsLoading={bulkDeleteMutation.isLoading}
+      bulkDeleteIsLoading={bulkDeleteMutation.isPending}
     />
   );
 }

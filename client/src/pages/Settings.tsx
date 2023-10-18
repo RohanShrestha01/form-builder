@@ -24,7 +24,7 @@ export default function Settings() {
 
   useTitle('Settings | Form Builder');
 
-  const { mutate, isLoading } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: () => axiosPrivate.delete('/user/delete-account'),
     onSuccess: () => toast.success('Account deleted successfully'),
     onError: () => toast.error('Error deleting account'),
@@ -63,7 +63,7 @@ export default function Settings() {
             <AlertDialogFooter className="sm:space-x-4">
               <Button
                 variant="destructive"
-                isLoading={isLoading}
+                isLoading={isPending}
                 onClick={() => {
                   mutate();
                   logout();
@@ -71,7 +71,7 @@ export default function Settings() {
               >
                 Yes, Delete
               </Button>
-              <AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
+              <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

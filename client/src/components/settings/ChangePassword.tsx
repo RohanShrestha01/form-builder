@@ -28,7 +28,7 @@ export default function ChangePassword() {
     resolver: zodResolver(changePasswordSchema),
   });
 
-  const { mutate, isLoading } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: (data: ChangePasswordFormType) =>
       axiosPrivate.patch('/user/change-password', data),
   });
@@ -62,7 +62,7 @@ export default function ChangePassword() {
           label="Old Password"
           placeholder="Enter old password"
           type="password"
-          disabled={isLoading}
+          disabled={isPending}
           errorMessage={errors.oldPassword?.message}
           showRequired
           {...register('oldPassword')}
@@ -72,7 +72,7 @@ export default function ChangePassword() {
             label="New Password"
             placeholder="Enter new password"
             type="password"
-            disabled={isLoading}
+            disabled={isPending}
             errorMessage={errors.newPassword?.message}
             showRequired
             {...register('newPassword')}
@@ -84,7 +84,7 @@ export default function ChangePassword() {
             label="Confirm Password"
             placeholder="Enter new password again"
             type="password"
-            disabled={isLoading}
+            disabled={isPending}
             errorMessage={errors.cNewPassword?.message}
             showRequired
             {...register('cNewPassword')}
@@ -93,7 +93,7 @@ export default function ChangePassword() {
         </div>
       </article>
       <div className="flex justify-end">
-        <Button disabled={!isDirty} isLoading={isLoading}>
+        <Button disabled={!isDirty} isLoading={isPending}>
           Change Password
         </Button>
       </div>

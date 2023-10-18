@@ -36,10 +36,12 @@ export default function DataTableRowActions({ formId }: { formId: string }) {
 
   const queryClient = useQueryClient();
   const axiosPrivate = useAxiosPrivate();
-  const { mutate, isLoading } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: () => axiosPrivate.delete('/forms/' + formId),
     onSuccess: () => {
-      queryClient.invalidateQueries(['forms']);
+      queryClient.invalidateQueries({
+        queryKey: ['forms'],
+      });
       toast.success('Form deleted successfully');
     },
     onError: () => toast.error('Error deleting form'),
@@ -103,14 +105,14 @@ export default function DataTableRowActions({ formId }: { formId: string }) {
             <AlertDialogFooter className="sm:space-x-4">
               <Button
                 variant="destructive"
-                isLoading={isLoading}
+                isLoading={isPending}
                 onClick={() => {
                   mutate();
                 }}
               >
                 Yes, delete form
               </Button>
-              <AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
+              <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

@@ -55,7 +55,7 @@ export default function ProfileDetails() {
     },
   });
 
-  const { mutate, isLoading, variables } = useMutation({
+  const { mutate, isPending, variables } = useMutation({
     mutationFn: (data: ProfileDetailsFormType & { avatar?: File | null }) =>
       axiosPrivate.patch('/user/profile', data),
   });
@@ -112,7 +112,7 @@ export default function ProfileDetails() {
             <Button
               type="button"
               className="cursor-pointer gap-2"
-              disabled={isLoading}
+              disabled={isPending}
             >
               <ImagePlusIcon className="h-5 w-5" />
               <span>Upload New</span>
@@ -123,7 +123,7 @@ export default function ProfileDetails() {
               <Button
                 type="button"
                 variant="outline"
-                disabled={isLoading}
+                disabled={isPending}
                 className="gap-2"
               >
                 <ImageMinusIcon className="h-5 w-5" />
@@ -142,7 +142,7 @@ export default function ProfileDetails() {
               <AlertDialogFooter className="sm:space-x-4">
                 <Button
                   variant="destructive"
-                  isLoading={isLoading}
+                  isLoading={isPending}
                   onClick={() => {
                     mutate(
                       {
@@ -174,7 +174,7 @@ export default function ProfileDetails() {
                 >
                   Yes, delete avatar
                 </Button>
-                <AlertDialogCancel disabled={isLoading}>
+                <AlertDialogCancel disabled={isPending}>
                   Cancel
                 </AlertDialogCancel>
               </AlertDialogFooter>
@@ -187,7 +187,7 @@ export default function ProfileDetails() {
           label="Full Name"
           placeholder="Enter your full name"
           showRequired
-          disabled={isLoading}
+          disabled={isPending}
           errorMessage={errors.name?.message}
           {...register('name')}
         />
@@ -196,7 +196,7 @@ export default function ProfileDetails() {
           type="email"
           placeholder="Enter your email address"
           showRequired
-          disabled={isLoading}
+          disabled={isPending}
           errorMessage={errors.email?.message}
           {...register('email')}
         />
@@ -206,7 +206,7 @@ export default function ProfileDetails() {
           <Button
             type="button"
             variant="outline"
-            disabled={isLoading}
+            disabled={isPending}
             onClick={() => reset()}
             className="border-destructive text-destructive hover:bg-destructive/5 hover:text-destructive"
           >
@@ -214,8 +214,8 @@ export default function ProfileDetails() {
           </Button>
         )}
         <Button
-          disabled={!isDirty || isLoading}
-          isLoading={isLoading && variables?.email !== undefined}
+          disabled={!isDirty || isPending}
+          isLoading={isPending && variables?.email !== undefined}
         >
           Save Changes
         </Button>

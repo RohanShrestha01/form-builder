@@ -93,7 +93,7 @@ export default function Signup() {
           <CardDescription>Enter your email to create account</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-          <SignInButtons disabled={mutation.isLoading} />
+          <SignInButtons disabled={mutation.isPending} />
           <div className="relative z-10 text-center">
             <hr className="absolute left-0 right-0 top-1/2 -z-10" />
             <p className="inline-block bg-white px-4 text-sm uppercase text-muted-foreground">
@@ -105,7 +105,7 @@ export default function Signup() {
             type="text"
             className="text-slate-600"
             errorMessage={errors.name?.message}
-            disabled={mutation.isLoading}
+            disabled={mutation.isPending}
             {...register('name')}
           />
           <InputField
@@ -113,7 +113,7 @@ export default function Signup() {
             type="email"
             className="text-slate-600"
             errorMessage={errors.email?.message}
-            disabled={mutation.isLoading}
+            disabled={mutation.isPending}
             {...register('email')}
           />
           <div className="relative">
@@ -122,7 +122,7 @@ export default function Signup() {
               type="password"
               className="text-slate-600"
               errorMessage={errors.password?.message}
-              disabled={mutation.isLoading}
+              disabled={mutation.isPending}
               {...register('password')}
             />
             <PasswordInfoCard className="absolute -top-[1px] left-[73px]" />
@@ -133,7 +133,7 @@ export default function Signup() {
               type="password"
               className="text-slate-600"
               errorMessage={errors.cPassword?.message}
-              disabled={mutation.isLoading}
+              disabled={mutation.isPending}
               {...register('cPassword')}
             />
             <PasswordInfoCard className="absolute -top-[1px] left-[130px]" />
@@ -143,7 +143,7 @@ export default function Signup() {
           <Button
             type="submit"
             className="w-full"
-            isLoading={mutation.isLoading}
+            isLoading={mutation.isPending}
           >
             Sign Up
           </Button>
