@@ -40,10 +40,6 @@ export default function DataTableShimmer({ columns }: { columns: number }) {
           </tbody>
         </table>
       </div>
-      <div className="flex h-8 items-center justify-between">
-        <Skeleton className="h-3 w-52" />
-        <Skeleton className="h-5 w-[500px]" />
-      </div>
     </article>
   );
 }

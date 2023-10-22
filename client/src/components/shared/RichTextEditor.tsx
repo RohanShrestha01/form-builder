@@ -31,6 +31,7 @@ import { Button } from '../ui/Button';
 import { useState } from 'react';
 import Tooltip from '../ui/Tooltip';
 import { ScrollArea } from '../ui/ScrollArea';
+import type { ControllerRenderProps, FieldValues } from 'react-hook-form';
 
 const extensions = [
   StarterKit.configure({
@@ -286,7 +287,11 @@ const EditorToolbar = ({ className = '', editor }: Props) => {
   );
 };
 
-export default function RichTextEditor() {
+interface EditorProps {
+  field?: ControllerRenderProps<FieldValues, string>;
+}
+
+export default function RichTextEditor({ field }: EditorProps) {
   const [isFocused, setIsFocused] = useState(false);
 
   const editor = useEditor({
@@ -299,7 +304,15 @@ export default function RichTextEditor() {
     },
     onFocus: () => setIsFocused(true),
     onBlur: () => setIsFocused(false),
+    content: field?.value,
+    onUpdate: ({ editor }) => {
+      if (!field) return;
+      const content = editor.getHTML();
+      field.onChange(content === '<p></p>' ? '' : content);
+    },
   });
+
+  if (!field?.value) editor?.commands.clearContent();
 
   return (
     <article

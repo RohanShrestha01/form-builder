@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { CalendarDaysIcon } from 'lucide-react';
 import { format } from 'date-fns';
+import type { ControllerRenderProps, FieldValues } from 'react-hook-form';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
@@ -11,8 +12,17 @@ import {
   PopoverTrigger,
 } from '@/components/ui/Popover';
 
-export function DatePicker() {
+interface Props {
+  field?: ControllerRenderProps<FieldValues, string>;
+  required?: boolean;
+}
+
+export function DatePicker({ field, required = false }: Props) {
   const [date, setDate] = React.useState<Date>();
+
+  React.useEffect(() => {
+    setDate(field?.value ?? null);
+  }, [field?.value]);
 
   return (
     <Popover>
@@ -35,8 +45,12 @@ export function DatePicker() {
           toYear={2030}
           mode="single"
           selected={date}
-          onSelect={setDate}
+          onSelect={value => {
+            setDate(value);
+            field?.onChange(value);
+          }}
           initialFocus
+          required={required}
         />
       </PopoverContent>
     </Popover>

@@ -29,6 +29,7 @@ import {
 } from '../ui/Select';
 import { RadioGroup, RadioGroupItem } from '../ui/RadioGroup';
 import { Combobox } from '../ui/Combobox';
+import type { ControllerRenderProps, FieldValues } from 'react-hook-form';
 
 const animateLayoutChanges: AnimateLayoutChanges = args => {
   const { isSorting, wasDragging } = args;
@@ -39,11 +40,13 @@ const animateLayoutChanges: AnimateLayoutChanges = args => {
 interface Props {
   formElement: FormElementsType;
   isView?: boolean;
+  field?: ControllerRenderProps<FieldValues, string>;
 }
 
 export default function FormElementCard({
   formElement,
   isView = false,
+  field,
 }: Props) {
   const { id, label, type, required, options } = formElement;
   const removeFormElement = useFormPlaygroundStore(
@@ -97,9 +100,15 @@ export default function FormElementCard({
         <div className="flex items-center gap-8">
           <div className="flex w-full items-center gap-5">
             {type === 'switch' ? (
-              <Switch />
+              <Switch
+                checked={field?.value}
+                onCheckedChange={field?.onChange}
+              />
             ) : type === 'checkbox' ? (
-              <Checkbox />
+              <Checkbox
+                checked={field?.value}
+                onCheckedChange={field?.onChange}
+              />
             ) : null}
             <BubbleMenuEditor
               placeholder={
@@ -151,13 +160,29 @@ export default function FormElementCard({
           )}
         </div>
         {type === 'single-line' ? (
-          <Input placeholder="Single line text" />
+          <Input
+            placeholder="Single line text"
+            required={field ? required : false}
+            value={field?.value ?? ''}
+            onChange={field?.onChange}
+          />
         ) : type === 'number' ? (
-          <Input type="number" placeholder="Number" />
+          <Input
+            type="number"
+            placeholder="Number"
+            required={field ? required : false}
+            value={field?.value ?? ''}
+            onChange={field?.onChange}
+          />
         ) : type === 'multi-line' ? (
-          <Textarea placeholder="Multi line text..." />
+          <Textarea
+            placeholder="Multi line text..."
+            required={field ? required : false}
+            value={field?.value ?? ''}
+            onChange={field?.onChange}
+          />
         ) : type === 'rich-text' ? (
-          <RichTextEditor />
+          <RichTextEditor field={field} />
         ) : ['checklist', 'multi-choice', 'dropdown', 'combobox'].includes(
             type,
           ) && !isView ? (
@@ -166,7 +191,17 @@ export default function FormElementCard({
           <ul className="space-y-3">
             {options?.map(({ label, value }) => (
               <li key={value} className="flex items-center gap-3">
-                <Checkbox id={value} />
+                <Checkbox
+                  id={value}
+                  checked={field?.value?.includes(label) ?? false}
+                  onCheckedChange={checked => {
+                    if (checked) field?.onChange([...field.value, label]);
+                    else
+                      field?.onChange(
+                        field.value.filter((val: string) => val !== label),
+                      );
+                  }}
+                />
                 <Label
                   htmlFor={value}
                   className="flex h-5 items-center font-normal"
@@ -177,7 +212,11 @@ export default function FormElementCard({
             ))}
           </ul>
         ) : type === 'multi-choice' ? (
-          <RadioGroup className="gap-3">
+          <RadioGroup
+            className="gap-3"
+            value={field?.value}
+            onValueChange={field?.onChange}
+          >
             {options?.map(({ label, value }) => (
               <div key={value} className="flex items-center space-x-3">
                 <RadioGroupItem value={value} id={value} />
@@ -191,7 +230,11 @@ export default function FormElementCard({
             ))}
           </RadioGroup>
         ) : type === 'dropdown' ? (
-          <Select>
+          <Select
+            value={field?.value}
+            onValueChange={field?.onChange}
+            required={field ? required : false}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Select an option..." />
             </SelectTrigger>
@@ -204,20 +247,35 @@ export default function FormElementCard({
             </SelectContent>
           </Select>
         ) : type === 'combobox' && options ? (
-          <Combobox options={options} />
+          <Combobox options={options} field={field} />
         ) : type === 'date' ? (
-          <DatePicker />
+          <DatePicker field={field} />
         ) : type === 'date-range' ? (
-          <DateRangePicker />
+          <DateRangePicker field={field} />
         ) : type === 'time' ? (
-          <Input type="time" className="w-32" />
+          <Input
+            type="time"
+            className="w-32"
+            required={field ? required : false}
+            value={field?.value ?? ''}
+            onChange={field?.onChange}
+          />
         ) : type === 'attachments' ? (
-          <Input type="file" className="pt-1.5 text-muted-foreground" />
+          <Input
+            type="file"
+            className="pt-1.5 text-muted-foreground"
+            required={field ? required : false}
+            value={field?.value ?? ''}
+            onChange={field?.onChange}
+          />
         ) : type === 'image' ? (
           <Input
             type="file"
             accept="image/*"
             className="pt-1.5 text-muted-foreground"
+            required={field ? required : false}
+            value={field?.value ?? ''}
+            onChange={field?.onChange}
           />
         ) : null}
         {isView && required ? (

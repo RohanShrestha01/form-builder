@@ -89,13 +89,11 @@ export default function FormPlayground({
                 isUpdate ? 'h-[calc(100vh-247px)]' : 'h-[calc(100vh-212px)]'
               }
             >
-              <ul className="space-y-5 py-5 pl-5 pr-5">
+              <div className="space-y-5 py-5 pl-5 pr-5">
                 {formElements.map(element => (
-                  <li key={element.id}>
-                    <FormElementCard formElement={element} />
-                  </li>
+                  <FormElementCard key={element.id} formElement={element} />
                 ))}
-              </ul>
+              </div>
               <div ref={cardsEndRef} />
             </ScrollArea>
           )}
