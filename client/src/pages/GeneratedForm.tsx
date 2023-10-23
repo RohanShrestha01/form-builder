@@ -96,13 +96,15 @@ export default function GeneratedForm() {
     }
 
     console.log(
-      data.elements.map(({ id, label, options, type }) => ({
-        question: label,
-        answer:
-          options && type !== 'checklist'
-            ? options.find(({ value }) => value === values[id])?.label ?? null
-            : values[id] ?? null,
-      })),
+      data.elements
+        .filter(({ type }) => !['heading', 'description'].includes(type))
+        .map(({ id, label, options, type }) => ({
+          question: label,
+          answer:
+            options && type !== 'checklist'
+              ? options.find(({ value }) => value === values[id])?.label ?? null
+              : values[id] ?? null,
+        })),
     );
   };
 

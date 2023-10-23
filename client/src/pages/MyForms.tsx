@@ -92,6 +92,7 @@ export default function MyForms() {
             checked={row.getIsSelected()}
             onCheckedChange={value => row.toggleSelected(!!value)}
             aria-label="Select row"
+            onClick={e => e.stopPropagation()}
           />
         ),
         enableSorting: false,
@@ -112,6 +113,7 @@ export default function MyForms() {
             onCheckedChange={checked => {
               mutation.mutate({ formId: row.original._id, isActive: checked });
             }}
+            onClick={e => e.stopPropagation()}
           />
         ),
       },
@@ -160,6 +162,9 @@ export default function MyForms() {
         bulkDeleteMutation.mutate(forms);
       }}
       bulkDeleteIsLoading={bulkDeleteMutation.isPending}
+      clickHandler={formId => {
+        window.open(window.location.origin + '/forms/' + formId, '_blank');
+      }}
     />
   );
 }

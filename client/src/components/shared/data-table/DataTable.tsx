@@ -41,6 +41,7 @@ interface DataTableProps<TData, TValue> {
   bulkDeleteHandler: (items: string[]) => void;
   bulkDeleteIsLoading: boolean;
   isFetching?: boolean;
+  clickHandler?: (id: string) => void;
 }
 
 export function DataTable<TData extends { _id: string }, TValue>({
@@ -50,6 +51,7 @@ export function DataTable<TData extends { _id: string }, TValue>({
   bulkDeleteHandler,
   bulkDeleteIsLoading,
   isFetching = false,
+  clickHandler = () => {},
 }: DataTableProps<TData, TValue>) {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -182,7 +184,8 @@ export function DataTable<TData extends { _id: string }, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
-                  className={isFetching ? 'opacity-60' : ''}
+                  className={isFetching ? 'opacity-60' : 'cursor-pointer'}
+                  onClick={() => clickHandler(row.original._id)}
                 >
                   {row.getVisibleCells().map(cell => (
                     <TableCell key={cell.id}>

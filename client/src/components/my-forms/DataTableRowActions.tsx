@@ -53,12 +53,17 @@ export default function DataTableRowActions({ formId }: { formId: string }) {
         <Button
           variant="ghost"
           className="h-8 w-8 p-0 data-[state=open]:bg-muted"
+          onClick={e => e.stopPropagation()}
         >
           <span className="sr-only">Open menu</span>
           <MoreHorizontal className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[160px]">
+      <DropdownMenuContent
+        align="end"
+        className="w-[160px]"
+        onClick={e => e.stopPropagation()}
+      >
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuItem
           className="flex items-center gap-2"
