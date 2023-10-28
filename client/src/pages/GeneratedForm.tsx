@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { Link, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 import { Button } from '../components/ui/Button';
 import {
@@ -67,6 +67,24 @@ export default function GeneratedForm() {
     queryFn: () => axios('/forms/' + id).then(res => res.data.data.form),
   });
 
+  const mutation = useMutation({
+    mutationFn: (
+      response: {
+        question: string;
+        answer: unknown;
+      }[],
+    ) =>
+      axios.post(
+        '/forms/' + id + '/responses',
+        { response },
+        {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        },
+      ),
+    onSuccess: () => toast.success('Form submitted successfully'),
+    onError: () => toast.error('Error submitting form'),
+  });
+
   useTitle(data?.name || 'Form Builder');
 
   const form = useForm();
@@ -95,17 +113,17 @@ export default function GeneratedForm() {
       }
     }
 
-    console.log(
-      data.elements
-        .filter(({ type }) => !['heading', 'description'].includes(type))
-        .map(({ id, label, options, type }) => ({
-          question: label,
-          answer:
-            options && type !== 'checklist'
-              ? options.find(({ value }) => value === values[id])?.label ?? null
-              : values[id] ?? null,
-        })),
-    );
+    const response = data.elements
+      .filter(({ type }) => !['heading', 'description'].includes(type))
+      .map(({ id, label, options, type }) => ({
+        question: label,
+        answer:
+          options && type !== 'checklist'
+            ? options.find(({ value }) => value === values[id])?.label ?? null
+            : values[id] ?? null,
+      }));
+
+    mutation.mutate(response);
   };
 
   return (
@@ -123,10 +141,15 @@ export default function GeneratedForm() {
             </Link>
             <div className="flex gap-6">
               <ClearFormButton
-                disabled={isPending}
+                disabled={isPending || mutation.isPending}
                 onClear={() => form.reset()}
               />
-              <Button disabled={isPending}>Submit Form</Button>
+              <Button
+                disabled={isPending || !data?.isActive}
+                isLoading={mutation.isPending}
+              >
+                Submit Form
+              </Button>
             </div>
           </div>
         </header>
@@ -165,9 +188,22 @@ export default function GeneratedForm() {
                   />
                 </li>
               ))}
+              {data.isActive ? null : (
+                <li className="text-sm font-medium text-rose-700">
+                  * Note: The status of this form is closed.
+                </li>
+              )}
               <li className="flex justify-between">
-                <ClearFormButton onClear={() => form.reset()} />
-                <Button>Submit Form</Button>
+                <ClearFormButton
+                  onClear={() => form.reset()}
+                  disabled={mutation.isPending}
+                />
+                <Button
+                  disabled={!data.isActive}
+                  isLoading={mutation.isPending}
+                >
+                  Submit Form
+                </Button>
               </li>
             </ul>
           </main>
