@@ -1,18 +1,18 @@
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import {
   FacebookSvg,
   GithubSvg,
   GoogleSvg,
-  SSOKeySvg,
+  // SSOKeySvg,
 } from '../../assets/icons/Svgs';
 import { Button } from '../ui/Button';
 
 export default function SignInButtons({ disabled }: { disabled?: boolean }) {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   return (
     <div className="flex justify-around">
-      <article className="space-y-2 text-center">
+      {/* <article className="space-y-2 text-center">
         <Button
           type="button"
           variant="outline"
@@ -26,7 +26,7 @@ export default function SignInButtons({ disabled }: { disabled?: boolean }) {
         <p className="text-sm text-muted-foreground transition-colors peer-hover:text-foreground">
           SSO
         </p>
-      </article>
+      </article> */}
       <article className="space-y-2 text-center">
         <Button
           type="button"

@@ -29,6 +29,7 @@ import {
 } from '../ui/AlertDialog';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ResponsesDialog from './ResponsesDialog';
 
 export default function DataTableRowActions({ formId }: { formId: string }) {
   const [open, setOpen] = useState(false);
@@ -74,10 +75,15 @@ export default function DataTableRowActions({ formId }: { formId: string }) {
           <LinkIcon className="h-4 w-4 text-muted-foreground" />
           <span>Open Form Link</span>
         </DropdownMenuItem>
-        <DropdownMenuItem className="flex items-center gap-2">
-          <FilesIcon className="h-4 w-4 text-muted-foreground" />
-          <span>Show Responses</span>
-        </DropdownMenuItem>
+        <ResponsesDialog formId={formId} closeHandler={() => setOpen(false)}>
+          <DropdownMenuItem
+            className="flex items-center gap-2"
+            onSelect={e => e.preventDefault()}
+          >
+            <FilesIcon className="h-4 w-4 text-muted-foreground" />
+            <span>Show Responses</span>
+          </DropdownMenuItem>
+        </ResponsesDialog>
         <DropdownMenuItem
           className="flex items-center gap-2"
           onClick={() => navigate(formId + '/edit')}

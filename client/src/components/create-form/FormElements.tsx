@@ -5,9 +5,9 @@ import {
   ChevronDownCircleIcon,
   ClockIcon,
   HeadingIcon,
-  ImageIcon,
+  // ImageIcon,
   ListTodoIcon,
-  PaperclipIcon,
+  // PaperclipIcon,
   PencilLineIcon,
   TextIcon,
   ToggleRightIcon,
@@ -107,7 +107,7 @@ const elementGroups = [
       },
     ],
   },
-  {
+  /* {
     title: 'Media Elements',
     elements: [
       {
@@ -119,7 +119,7 @@ const elementGroups = [
         Icon: ImageIcon,
       },
     ],
-  },
+  }, */
 ];
 
 interface Props {

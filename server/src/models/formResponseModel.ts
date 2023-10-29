@@ -3,6 +3,7 @@ import { type ObjectId, Schema, model } from 'mongoose';
 interface IFormResponse {
   form: ObjectId;
   response: {
+    elementType: string;
     question: string;
     answer: any;
   }[];
@@ -17,6 +18,7 @@ const formResponseSchema = new Schema<IFormResponse>(
     },
     response: [
       {
+        elementType: String,
         question: String,
         answer: Schema.Types.Mixed,
       },

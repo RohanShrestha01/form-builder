@@ -3,7 +3,7 @@ import Login from './pages/auth/Login';
 import AuthLayout from './layouts/AuthLayout';
 import Signup from './pages/auth/Signup';
 import RecoverPassword from './pages/auth/RecoverPassword';
-import SSOLogin from './pages/auth/SSOLogin';
+// import SSOLogin from './pages/auth/SSOLogin';
 import ResetPassword from './pages/auth/ResetPassword';
 import RequireAuth from './components/auth/RequireAuth';
 import CreateForm from './pages/CreateForm';
@@ -24,10 +24,10 @@ const router = createBrowserRouter([
         path: '/login',
         element: <Login />,
       },
-      {
+      /* {
         path: '/sso/login',
         element: <SSOLogin />,
-      },
+      }, */
       {
         path: '/signup',
         element: <Signup />,

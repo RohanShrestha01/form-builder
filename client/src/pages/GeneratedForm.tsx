@@ -70,17 +70,11 @@ export default function GeneratedForm() {
   const mutation = useMutation({
     mutationFn: (
       response: {
+        elementType: string;
         question: string;
         answer: unknown;
       }[],
-    ) =>
-      axios.post(
-        '/forms/' + id + '/responses',
-        { response },
-        {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        },
-      ),
+    ) => axios.post('/forms/' + id + '/responses', { response }),
     onSuccess: () => toast.success('Form submitted successfully'),
     onError: () => toast.error('Error submitting form'),
   });
@@ -116,6 +110,7 @@ export default function GeneratedForm() {
     const response = data.elements
       .filter(({ type }) => !['heading', 'description'].includes(type))
       .map(({ id, label, options, type }) => ({
+        elementType: type,
         question: label,
         answer:
           options && type !== 'checklist'

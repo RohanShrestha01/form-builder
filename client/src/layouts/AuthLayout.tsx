@@ -38,12 +38,9 @@ export default function AuthLayout() {
         {pathname === '/demo' ? (
           <Outlet />
         ) : (
-          <>
-            <section className="flex-grow"></section>
-            <section className="w-[424px] self-center">
-              <Outlet />
-            </section>
-          </>
+          <section className="mx-auto w-[424px] self-center">
+            <Outlet />
+          </section>
         )}
       </main>
     </div>
