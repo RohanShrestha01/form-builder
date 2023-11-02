@@ -2,7 +2,9 @@
   "name": "form-builder",
   "version": "1.0.0",
   "scripts": {
-    "dev": "pnpm --stream -r run dev"
+    "dev": "pnpm --stream -r run dev",
+    "build": "pnpm --stream -r run build",
+    "preview": "pnpm --stream -r run preview"
   },
   "keywords": [],
   "author": "Rohan Shrestha",

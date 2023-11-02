@@ -17,6 +17,10 @@ import { ScrollArea } from '../ui/ScrollArea';
 import { useState } from 'react';
 import BubbleMenuEditor from '../shared/BubbleMenuEditor';
 import { format } from 'date-fns';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(relativeTime);
 
 type FormResponseType = {
   createdAt: string;
@@ -83,43 +87,48 @@ export default function ResponsesDialog({
           <>
             <DialogHeader className="space-y-4">
               <DialogTitle>{data.length} Responses</DialogTitle>
-              <div className="flex items-center gap-4">
-                <Button
-                  variant="ghost"
-                  className="h-8 w-8 rounded-full p-0"
-                  onClick={() => {
-                    setResponseNum(prev => prev - 1);
-                  }}
-                  disabled={responseNum === 1}
-                >
-                  <span className="sr-only">Go to previous page</span>
-                  <ChevronLeftIcon className="h-4 w-4" />
-                </Button>
-                <Input
-                  type="number"
-                  className="h-8 w-12 rounded-none border-x-0 border-t-0 px-0 text-right shadow-none"
-                  min="1"
-                  max={data.length}
-                  value={responseNum}
-                  onChange={e => {
-                    const num = Number(e.target.value);
-                    if (num < 1 || num > data.length) return;
-                    setResponseNum(num);
-                  }}
-                  onFocus={e => e.target.select()}
-                />
-                <span>of {data.length}</span>
-                <Button
-                  variant="ghost"
-                  className="h-8 w-8 rounded-full p-0"
-                  onClick={() => {
-                    setResponseNum(prev => prev + 1);
-                  }}
-                  disabled={responseNum === data.length}
-                >
-                  <span className="sr-only">Go to next page</span>
-                  <ChevronRightIcon className="h-4 w-4" />
-                </Button>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <Button
+                    variant="ghost"
+                    className="h-8 w-8 rounded-full p-0"
+                    onClick={() => {
+                      setResponseNum(prev => prev - 1);
+                    }}
+                    disabled={responseNum === 1}
+                  >
+                    <span className="sr-only">Go to previous page</span>
+                    <ChevronLeftIcon className="h-4 w-4" />
+                  </Button>
+                  <Input
+                    type="number"
+                    className="h-8 w-12 rounded-none border-x-0 border-t-0 px-0 text-right shadow-none"
+                    min="1"
+                    max={data.length}
+                    value={responseNum}
+                    onChange={e => {
+                      const num = Number(e.target.value);
+                      if (num < 1 || num > data.length) return;
+                      setResponseNum(num);
+                    }}
+                    onFocus={e => e.target.select()}
+                  />
+                  <span>of {data.length}</span>
+                  <Button
+                    variant="ghost"
+                    className="h-8 w-8 rounded-full p-0"
+                    onClick={() => {
+                      setResponseNum(prev => prev + 1);
+                    }}
+                    disabled={responseNum === data.length}
+                  >
+                    <span className="sr-only">Go to next page</span>
+                    <ChevronRightIcon className="h-4 w-4" />
+                  </Button>
+                </div>
+                <span className="text-sm font-medium">
+                  {dayjs(data[responseNum - 1].createdAt).fromNow()}
+                </span>
               </div>
             </DialogHeader>
             <ScrollArea className="mt-6 h-96">

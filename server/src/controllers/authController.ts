@@ -6,7 +6,8 @@ import {
   registerSchema,
   resetPasswordSchema,
 } from '@form-builder/validation';
-import { sign } from 'jsonwebtoken';
+import { sign, decode } from 'jsonwebtoken';
+import { OAuth2Client } from 'google-auth-library';
 
 import User from '../models/userModel';
 import catchAsyncError from '../utils/catchAsyncError';
@@ -255,6 +256,30 @@ export const resetPassword = catchAsyncError(
     res.status(200).json({
       status: 'success',
       message: 'Password reset successfully',
+    });
+  },
+);
+
+export const googleLogin = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const oAuth2Client = new OAuth2Client(
+      process.env.GOOGLE_CLIENT_ID,
+      process.env.GOOGLE_CLIENT_SECRET,
+      'postmessage',
+    );
+
+    const { tokens } = await oAuth2Client.getToken(req.body.code);
+    if (!tokens.id_token)
+      return next(
+        new AppError('Failed to retrieve user data from google!', 500),
+      );
+
+    const decoded = decode(tokens.id_token);
+    console.log(decoded);
+
+    res.status(200).json({
+      status: 'success',
+      data: tokens,
     });
   },
 );

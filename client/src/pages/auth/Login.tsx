@@ -9,7 +9,7 @@ import {
   CardContent,
   CardFooter,
 } from '../../components/ui/Card';
-import SignInButtons from '../../components/auth/SignInButtons';
+// import SignInButtons from '../../components/auth/SignInButtons';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import axios from '@/lib/axios';
@@ -83,13 +83,13 @@ export default function Login() {
           <CardDescription>Sign in to your account</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-          <SignInButtons disabled={mutation.isPending} />
+          {/* <SignInButtons disabled={mutation.isPending} />
           <div className="relative z-10 text-center">
             <hr className="absolute left-0 right-0 top-1/2 -z-10" />
             <p className="inline-block bg-white px-4 text-sm uppercase text-muted-foreground">
               Or Login With Email
             </p>
-          </div>
+          </div> */}
           <InputField
             label="Email"
             type="email"

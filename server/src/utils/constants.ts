@@ -1,6 +1,9 @@
 import type { CookieOptions } from 'express';
 
-export const allowedOrigins = ['http://localhost:5173'];
+export const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:4173',
+];
 
 export const accessTokenExpiresIn = '1h';
 export const refreshTokenExpiresIn = '7d';

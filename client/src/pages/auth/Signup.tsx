@@ -15,7 +15,7 @@ import {
 } from '../../components/ui/Card';
 import InputField from '../../components/shared/InputField';
 import { Button } from '../../components/ui/Button';
-import SignInButtons from '../../components/auth/SignInButtons';
+// import SignInButtons from '../../components/auth/SignInButtons';
 import PasswordInfoCard from '../../components/auth/PasswordInfoCard';
 import { useMutation } from '@tanstack/react-query';
 import axios from '@/lib/axios';
@@ -93,13 +93,13 @@ export default function Signup() {
           <CardDescription>Enter your email to create account</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-          <SignInButtons disabled={mutation.isPending} />
+          {/* <SignInButtons disabled={mutation.isPending} />
           <div className="relative z-10 text-center">
             <hr className="absolute left-0 right-0 top-1/2 -z-10" />
             <p className="inline-block bg-white px-4 text-sm uppercase text-muted-foreground">
               Or Register With Email
             </p>
-          </div>
+          </div> */}
           <InputField
             label="Full Name"
             type="text"

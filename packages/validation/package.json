@@ -3,11 +3,14 @@
   "version": "1.0.0",
   "description": "A code library for validation, reusable in the frontend and backend.",
   "main": "index.ts",
-  "scripts": {},
+  "scripts": {
+    "build": "tsc"
+  },
   "keywords": [],
   "author": "shrestharohan039@gmail.com",
   "license": "ISC",
   "dependencies": {
+    "typescript": "^5.2.2",
     "zod": "^3.22.4"
   }
 }
