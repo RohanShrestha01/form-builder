@@ -2,6 +2,7 @@
   "name": "@form-builder/server",
   "version": "1.0.0",
   "scripts": {
+    "start": "nodemon",
     "dev": "nodemon",
     "build": "tsc",
     "preview": "node dist/server.js"
