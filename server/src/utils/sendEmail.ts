@@ -24,7 +24,9 @@ const sendEmail = async (options: Options) => {
     text: options.message,
   };
 
-  await transporter.sendMail(mailOptions);
+  await transporter.sendMail(mailOptions).catch(() => {
+    console.error('Sending email failed!');
+  });
 };
 
 export default sendEmail;
