@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { changePasswordSchema } from '@form-builder/validation';
+import { changePasswordSchema } from '@form-builder/validation/src/index';
 
 import SubHeading from '../shared/SubHeading';
 import InputField from '../shared/InputField';

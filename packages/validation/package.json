@@ -2,7 +2,7 @@
   "name": "@form-builder/validation",
   "version": "1.0.0",
   "description": "A code library for validation, reusable in the frontend and backend.",
-  "main": "index.ts",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc"
   },

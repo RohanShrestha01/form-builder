@@ -1,4 +1,4 @@
-import z from 'zod';
+import { z } from 'zod';
 
 const password = z
   .string({ required_error: 'Please provide a password' })

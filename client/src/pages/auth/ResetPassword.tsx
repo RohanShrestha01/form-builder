@@ -10,7 +10,7 @@ import {
 } from '../../components/ui/Card';
 import InputField from '../../components/shared/InputField';
 import { z } from 'zod';
-import { resetPasswordSchema } from '@form-builder/validation';
+import { resetPasswordSchema } from '@form-builder/validation/src/index';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';

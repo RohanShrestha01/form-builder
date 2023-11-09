@@ -11,7 +11,7 @@ import {
 import { Button } from '../../components/ui/Button';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { forgotPasswordSchema } from '@form-builder/validation';
+import { forgotPasswordSchema } from '@form-builder/validation/src/index';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import axios from '../../lib/axios';

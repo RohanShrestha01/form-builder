@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { registerSchema } from '@form-builder/validation';
+import { registerSchema } from '@form-builder/validation/src/index';
 import { z } from 'zod';
 import { toast } from 'react-hot-toast';
 

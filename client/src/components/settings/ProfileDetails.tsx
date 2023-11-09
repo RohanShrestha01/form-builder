@@ -3,7 +3,7 @@ import InputField from '../shared/InputField';
 import SubHeading from '../shared/SubHeading';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 import { z } from 'zod';
-import { userProfileSchema } from '@form-builder/validation';
+import { userProfileSchema } from '@form-builder/validation/src/index';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '../ui/Button';
