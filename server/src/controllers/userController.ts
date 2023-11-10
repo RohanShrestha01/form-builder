@@ -10,10 +10,11 @@ import User from '../models/userModel';
 import { compare, hash } from 'bcrypt';
 import { cookieOptions } from '../utils/constants';
 import sharp from 'sharp';
+import path from 'path';
 
 /* const multerStorage = multer.diskStorage({
   destination: (_req, _file, cb) => {
-    cb(null, 'public/img/users');
+    cb(null, path.join(__dirname, '..', '..', 'public', 'img', 'users'));
   },
   filename: (req, file, cb) => {
     const ext = file.mimetype.split('/')[1];
@@ -44,7 +45,17 @@ export const resizeUserPhoto = (
     .resize(500, 500)
     .toFormat('jpeg')
     .jpeg({ quality: 90 })
-    .toFile(`public/img/users/${req.file.filename}`);
+    .toFile(
+      path.join(
+        __dirname,
+        '..',
+        '..',
+        'public',
+        'img',
+        'users',
+        req.file.filename,
+      ),
+    );
 
   next();
 };
