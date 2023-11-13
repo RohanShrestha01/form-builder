@@ -3,7 +3,7 @@ A Full Stack MERN app for building dynamic forms with drag and drop interface &a
 
 https://easyformbuilder.netlify.app/
 
-![Screenshot of form builder website](https://github.com/RohanShrestha01/form-builder/assets/70142301/4c0bde94-51a8-4a66-ad6e-cca367801e9d)
+![Screenshot of form builder website](https://github.com/RohanShrestha01/form-builder/assets/70142301/a4273f13-1842-46cb-aef6-b04244c8f46e)
 
 ## Installation
 You need to install [pnpm](https://pnpm.io/installation) first as pnpm workspace is used for this monorepo.
