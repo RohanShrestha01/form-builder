@@ -11,6 +11,7 @@ import { compare, hash } from 'bcrypt';
 import { cookieOptions } from '../utils/constants';
 import sharp from 'sharp';
 import path from 'path';
+import fs from 'fs';
 
 /* const multerStorage = multer.diskStorage({
   destination: (_req, _file, cb) => {
@@ -38,6 +39,12 @@ export const resizeUserPhoto = (
   next: NextFunction,
 ) => {
   if (!req.file) return next();
+  if (
+    !fs.existsSync(path.join(__dirname, '..', '..', 'public', 'img', 'users'))
+  )
+    fs.mkdirSync(path.join(__dirname, '..', '..', 'public', 'img', 'users'), {
+      recursive: true,
+    });
 
   req.file.filename = `user-${req.userId}-${Date.now()}.jpeg`;
 
