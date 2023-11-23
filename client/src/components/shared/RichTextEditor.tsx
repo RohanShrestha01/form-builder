@@ -299,7 +299,7 @@ export default function RichTextEditor({ field }: EditorProps) {
     editorProps: {
       attributes: {
         class:
-          'outline-none px-3 py-2 h-48 prose prose-sm prose-slate max-w-none',
+          'outline-none px-3 py-2 h-48 prose prose-sm prose-slate max-w-none prose-p:my-0',
       },
     },
     onFocus: () => setIsFocused(true),
@@ -312,7 +312,7 @@ export default function RichTextEditor({ field }: EditorProps) {
     },
   });
 
-  if (!field?.value) editor?.commands.clearContent();
+  // if (!field?.value) editor?.commands.clearContent();
 
   return (
     <article
