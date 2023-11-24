@@ -2,6 +2,7 @@
 A Full Stack MERN app for building dynamic forms with drag and drop interface &amp; to track and view the responses received in the created form.
 
 https://easyformbuilder.netlify.app/
+(Profile picture upload only works in local development as costs money in deployed server.)
 
 ![Screenshot of form builder website](https://github.com/RohanShrestha01/form-builder/assets/70142301/a4273f13-1842-46cb-aef6-b04244c8f46e)
 
