@@ -38,6 +38,10 @@ app.use(mongoSanitize());
 
 app.use(hpp());
 
+app.get('/', (_, res) => {
+  res.send('API is working perfectly fine!');
+});
+
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/forms', formRouter);
 app.use(verifyJWT);

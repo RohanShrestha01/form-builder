@@ -1,5 +1,5 @@
 import { type ObjectId, Schema, model } from 'mongoose';
-import type { FormElementsType } from '@form-builder/validation/types';
+import type { FormElementsType } from '@form-builder/validation/src/types';
 
 interface IForm {
   name: string;

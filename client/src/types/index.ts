@@ -1,4 +1,4 @@
-import { FormElementsType } from '@form-builder/validation/types';
+import { FormElementsType } from '@form-builder/validation/src/types';
 
 export interface PaginatedResponseType {
   total: number;

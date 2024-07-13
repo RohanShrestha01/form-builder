@@ -19,7 +19,7 @@ import { DatePicker } from '../shared/DatePicker';
 import { DateRangePicker } from '../shared/DateRangePicker';
 import Options from './Options';
 import { useFormPlaygroundStore } from '../../stores/formPlaygroundStore';
-import type { FormElementsType } from '@form-builder/validation/types';
+import type { FormElementsType } from '@form-builder/validation/src/types';
 import {
   Select,
   SelectContent,

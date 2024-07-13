@@ -3,7 +3,7 @@ import { immer } from 'zustand/middleware/immer';
 import { produce } from 'immer';
 import { v4 as uuid } from 'uuid';
 import { arrayMove } from '@dnd-kit/sortable';
-import type { FormElementsType } from '@form-builder/validation/types';
+import type { FormElementsType } from '@form-builder/validation/src/types';
 
 interface FormPlaygroundStoreType {
   formElements: FormElementsType[];
